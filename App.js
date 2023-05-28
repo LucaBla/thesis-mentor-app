@@ -1,12 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import Login from './components/LogIn';
+import { createContext, useState } from 'react';
+
+export const TokenContext = createContext(null);
 
 export default function App() {
+  const [authToken, setAuthToken] = useState('');
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <TokenContext.Provider value={{authToken, setAuthToken}}>
+      <Login/>
+    </TokenContext.Provider>
+   
   );
 }
 
