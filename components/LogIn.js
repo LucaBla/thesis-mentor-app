@@ -19,6 +19,7 @@ export default function Login() {
 
   return (
     <TouchableOpacity style={styles.logInPage} onPress={()=>Keyboard.dismiss()} activeOpacity={1}>
+      <StatusBar style="light" />
       <Text 
         style={styles.logInHeader}
       >
@@ -60,7 +61,6 @@ export default function Login() {
         </Pressable>
       </View>
       </View>
-      <StatusBar style="auto" />
     </TouchableOpacity>
   );
 }
