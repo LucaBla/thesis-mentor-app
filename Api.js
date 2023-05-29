@@ -31,6 +31,58 @@ async function getRole(authToken, setRole){
   }
 }
 
+async function getSupervisors(authToken, setSupervisors){
+  if(authToken == null){
+    return;
+  }else{
+    try{
+      const response = await fetch(`${API_URL}/supervisor`, {
+        method: "get",
+        headers: {
+          "Authorization": authToken,
+        }
+      })
+
+      if (!response.ok) {
+        const message = `An error has occured: ${response.status} - ${response.statusText}`;
+        throw new Error(message);
+      }
+
+      const json = await response.json();
+      setSupervisors(json);
+
+    } catch(error){
+      
+    }
+  }
+}
+
+async function getTags(authToken, setTags){
+  if(authToken == null){
+    return;
+  }else{
+    try{
+      const response = await fetch(`${API_URL}/tags`, {
+        method: "get",
+        headers: {
+          "Authorization": authToken,
+        }
+      })
+
+      if (!response.ok) {
+        const message = `An error has occured: ${response.status} - ${response.statusText}`;
+        throw new Error(message);
+      }
+
+      const json = await response.json();
+      setTags(json);
+
+    } catch(error){
+      
+    }
+  }
+}
+
 async function validateToken(authToken, setIsValidAuthToken){
   if(authToken == null){
     setIsValidAuthToken(false);
@@ -147,4 +199,4 @@ async function deleteToken() {
   }
 }
 
-export { logIn, validateToken, logOut, getRole };
+export { logIn, validateToken, logOut, getRole, getSupervisors, getTags };

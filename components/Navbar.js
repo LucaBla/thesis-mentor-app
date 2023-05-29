@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     position: 'absolute',
     width: '100%',
-    paddingVertical: 30,
+    paddingVertical: 20,
     paddingHorizontal: 20,
     flex: 1,
     flexDirection: 'row',
