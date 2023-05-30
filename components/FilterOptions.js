@@ -4,14 +4,17 @@ import { StyleSheet, Text, ScrollView, TouchableOpacity, Pressable, FlatList, Vi
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { getTags } from '../Api';
-import { TokenContext } from '../App';
+import { getTags, getSupervisorFromText } from '../Api';
 import TagCardFilter from './TagCardFilter';
 
-export default function FilterOptions({authToken, setShowFilterOptions}){
+export default function FilterOptions({authToken, setShowFilterOptions, setSupervisors, activeTags, setActiveTags}){
   const [tags, setTags] = useState([]);
-  const [activeTags, setActiveTags] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+
+  function closeFilterOptions(){
+    getSupervisorFromText(authToken, setSupervisors, activeTags);
+    setShowFilterOptions(false);
+  }
 
   useEffect(() => {
     getTags(authToken, setTags, null);
@@ -23,7 +26,7 @@ export default function FilterOptions({authToken, setShowFilterOptions}){
 
   return(
     <View>
-      <Pressable style={styles.closeButton} onPress={() => setShowFilterOptions(false)}>
+      <Pressable style={styles.closeButton} onPress={closeFilterOptions}>
         <Ionicons name="close" size={20} color="black" />
       </Pressable>
       <TextInput
@@ -32,8 +35,11 @@ export default function FilterOptions({authToken, setShowFilterOptions}){
         placeholderTextColor='rgba(255,255,255, 0.5)'
         onSubmitEditing={Keyboard.dismiss}
         onChangeText={setSearchQuery}
-        value={searchQuery}            
+        value={searchQuery}         
       />
+      <Pressable style={styles.clearButton} onPress={() => setActiveTags([])}>
+        <Text style={styles.clearButtonText}>Clear</Text>
+      </Pressable>
       <FlatList
         style={styles.tagList}
         data={tags}
@@ -69,5 +75,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     paddingVertical: 5
+  },
+  clearButton:{
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
+  clearButtonText:{
+    color: 'rgba(0,0,0, 0.5)'
   },
 });

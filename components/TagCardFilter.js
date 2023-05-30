@@ -8,7 +8,7 @@ import { getTags } from '../Api';
 import { TokenContext } from '../App';
 
 export default function tagCardFilter({title, id, setActiveTags, activeTags}){
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(activeTags.includes(id));
 
   function activateTag(){
     if(isActive){
@@ -20,6 +20,10 @@ export default function tagCardFilter({title, id, setActiveTags, activeTags}){
       setActiveTags(prevData => [...prevData, id]);
     }
   }
+
+  useEffect(() => {
+    setIsActive(activeTags.includes(id));
+  }, [activeTags]);
 
   return(
     <Pressable onPress={activateTag}

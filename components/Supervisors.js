@@ -12,6 +12,7 @@ import FilterOptions from './FilterOptions';
 export default function Supervisors() {
   const [supervisors, setSupervisors] = useState([]);
   const [showFilterOptions, setShowFilterOptions] = useState(false);
+  const [activeTags, setActiveTags] = useState([]);
 
   const{
     authToken,
@@ -46,26 +47,34 @@ export default function Supervisors() {
       {role == 'Student' && 
         <>
           {showFilterOptions == true ? (
-            <FilterOptions authToken={authToken} setShowFilterOptions={setShowFilterOptions}/>
+            <FilterOptions 
+              authToken={authToken} 
+              setShowFilterOptions={setShowFilterOptions} 
+              setSupervisors={setSupervisors}
+              activeTags={activeTags}
+              setActiveTags={setActiveTags}
+            />
           ):(
-            <>
+            <View>
               <Pressable style={styles.filterButton} onPress={() => setShowFilterOptions(true)}>
                 <Ionicons name="filter" size={20} color="black" />
               </Pressable>
-              <FlatList
-                data={supervisors}
-                renderItem={
-                  ({item}) => 
-                  <SupervisorCard 
-                    email={item.email} 
-                    first_name={item.first_name} 
-                    last_name={item.last_name}
-                    tags = {item.tags}
-                  />
-                }
-                keyExtractor={item => item.id}
-              />
-            </>
+              <View style={styles.supervisorList}>
+                <FlatList
+                  data={supervisors}
+                  renderItem={
+                    ({item}) => 
+                    <SupervisorCard 
+                      email={item.email} 
+                      first_name={item.first_name} 
+                      last_name={item.last_name}
+                      tags = {item.tags}
+                    />
+                  }
+                  keyExtractor={item => item.id}
+                />
+              </View>
+            </View>
           )
           }
         </>
@@ -83,6 +92,9 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: 'white',
     gap: 20
+  },
+  supervisorList:{
+    paddingBottom: 100
   },
   supervisorCard: {
     backgroundColor: '#0F4D7E',

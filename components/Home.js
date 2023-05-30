@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useContext, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Pressable, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Pressable, SafeAreaView, TouchableWithoutFeedback } from 'react-native';
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
@@ -22,7 +22,7 @@ export default function Home() {
   } = useContext(TokenContext);
 
   return (
-    <TouchableOpacity style={styles.homePage} onPress={()=>Keyboard.dismiss()} activeOpacity={1}>
+    <View style={styles.homePage} onPress={()=>Keyboard.dismiss()} activeOpacity={1}>
       <StatusBar style="dark" />
       <Text style={{position:'absolute'}}>{role}</Text>
       {activeSection === 'supervisors'? (
@@ -47,7 +47,7 @@ export default function Home() {
         setAuthToken={setAuthToken}
         setLoading={setLoading}
       />
-    </TouchableOpacity>
+    </View>
   );
 }
 
