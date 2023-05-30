@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, ScrollView, TouchableOpacity, Pressable, FlatList, View, Image } from 'react-native';
+import { StyleSheet, Text, ScrollView, TouchableOpacity, Pressable, FlatList, View, Image, TextInput } from 'react-native';
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
@@ -11,16 +11,29 @@ import TagCardFilter from './TagCardFilter';
 export default function FilterOptions({authToken, setShowFilterOptions}){
   const [tags, setTags] = useState([]);
   const [activeTags, setActiveTags] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    getTags(authToken, setTags);
+    getTags(authToken, setTags, null);
   }, []);
+
+  useEffect(() => {
+    getTags(authToken, setTags, searchQuery);
+  }, [searchQuery]);
 
   return(
     <View>
       <Pressable style={styles.closeButton} onPress={() => setShowFilterOptions(false)}>
-      <Ionicons name="close" size={20} color="black" />
+        <Ionicons name="close" size={20} color="black" />
       </Pressable>
+      <TextInput
+        style={styles.textInput} 
+        placeholder='search...' 
+        placeholderTextColor='rgba(255,255,255, 0.5)'
+        onSubmitEditing={Keyboard.dismiss}
+        onChangeText={setSearchQuery}
+        value={searchQuery}            
+      />
       <FlatList
         style={styles.tagList}
         data={tags}
@@ -36,14 +49,7 @@ export default function FilterOptions({authToken, setShowFilterOptions}){
 
 const styles = StyleSheet.create({
   tagList:{
-    marginHorizontal:20
-  },
-  tagCard:{
-    backgroundColor: '#4DA1C7',
-    alignSelf: 'flex-start',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 50,
+    marginHorizontal:20,
   },
   tagCardText:{
     color: 'white',
@@ -51,6 +57,17 @@ const styles = StyleSheet.create({
   },
   closeButton:{
     alignSelf: 'flex-end',
-    marginRight: 20
-  }
+    marginRight: 20,
+    marginBottom: 20,
+  },
+  textInput:{
+    backgroundColor: '#4DA1C7',
+    color: 'white',
+    fontSize: 20,
+    marginHorizontal: 20,
+    marginBottom: 20,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5
+  },
 });

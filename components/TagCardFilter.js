@@ -32,9 +32,9 @@ export default function tagCardFilter({title, id, setActiveTags, activeTags}){
 
 const styles = StyleSheet.create({
   tagCard:{
-    backgroundColor: '#4DA1C7',
-    alignSelf: 'flex-start',
-    paddingVertical: 5,
+    backgroundColor: '#B34545',
+    width: '100%',
+    paddingVertical: 10,
     paddingHorizontal: 10,
     borderRadius: 50,
   },
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
   },
   tagCardText:{
     color: 'white',
-    fontSize: 16
+    fontSize: 16,
+    textAlign: 'center',
   },
 });

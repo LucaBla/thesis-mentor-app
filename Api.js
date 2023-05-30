@@ -57,30 +57,53 @@ async function getSupervisors(authToken, setSupervisors){
   }
 }
 
-async function getTags(authToken, setTags){
+async function getTags(authToken, setTags, searchQuery){
+  console.log('test');
   if(authToken == null){
     return;
   }else{
-    try{
-      const response = await fetch(`${API_URL}/tags`, {
-        method: "get",
-        headers: {
-          "Authorization": authToken,
+    if(searchQuery !== null){
+      try{
+        const response = await fetch(`${API_URL}/tags?title=` +searchQuery, {
+          method: "get",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": authToken,
+          },
+        })
+        if (!response.ok) {
+          const message = `An error has occured: ${response.status} - ${response.statusText}`;
+          throw new Error(message);
         }
-      })
-
-      if (!response.ok) {
-        const message = `An error has occured: ${response.status} - ${response.statusText}`;
-        throw new Error(message);
+  
+        const json = await response.json();
+        setTags(json);
+  
+      } catch(error){
+        console.log(error);
       }
-
-      const json = await response.json();
-      setTags(json);
-
-    } catch(error){
-      
+    }else{
+      try{
+        const response = await fetch(`${API_URL}/tags`, {
+          method: "get",
+          headers: {
+            "Authorization": authToken,
+          }
+        })
+  
+        if (!response.ok) {
+          const message = `An error has occured: ${response.status} - ${response.statusText}`;
+          throw new Error(message);
+        }
+  
+        const json = await response.json();
+        setTags(json);
+  
+      } catch(error){
+        
+      }
     }
-  }
+    }
 }
 
 async function validateToken(authToken, setIsValidAuthToken){
