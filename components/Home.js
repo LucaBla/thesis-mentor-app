@@ -24,7 +24,6 @@ export default function Home() {
   return (
     <View style={styles.homePage} onPress={()=>Keyboard.dismiss()} activeOpacity={1}>
       <StatusBar style="dark" />
-      <Text style={{position:'absolute'}}>{role}</Text>
       {activeSection === 'supervisors'? (
         <Supervisors/>
       ):(

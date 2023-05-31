@@ -8,10 +8,8 @@ import { getSupervisors } from '../Api';
 import { TokenContext } from '../App';
 import SupervisorCard from './SupervisorCard';
 import FilterOptions from './FilterOptions';
-import SupervisorsStudent from './SupervisorsStudent';
-import SupervisorProfile from './SupervisorProfile';
 
-export default function Supervisors() {
+export default function SupervisorsStudent() {
   const [supervisors, setSupervisors] = useState([]);
   const [showFilterOptions, setShowFilterOptions] = useState(false);
   const [activeTags, setActiveTags] = useState([]);
@@ -45,24 +43,43 @@ export default function Supervisors() {
   }, []);
 
   return (
-    <View style={styles.ThemesWrapper}>
-      {role == 'Student' && 
-        <SupervisorsStudent/>
-      }
-      {role === 'Supervisor' &&
-        <SupervisorProfile/>
-      }
-    </View>
+    <>
+      {showFilterOptions == true ? (
+        <FilterOptions 
+          authToken={authToken} 
+          setShowFilterOptions={setShowFilterOptions} 
+          setSupervisors={setSupervisors}
+          activeTags={activeTags}
+          setActiveTags={setActiveTags}
+        />
+      ):(
+        <View>
+          <Pressable style={styles.filterButton} onPress={() => setShowFilterOptions(true)}>
+            <Ionicons name="filter" size={20} color="black" />
+          </Pressable>
+          <View style={styles.supervisorList}>
+            <FlatList
+              data={supervisors}
+              renderItem={
+                ({item}) => 
+                <SupervisorCard 
+                  email={item.email} 
+                  first_name={item.first_name} 
+                  last_name={item.last_name}
+                  tags = {item.tags}
+                />
+              }
+              keyExtractor={item => item.id}
+            />
+          </View>
+        </View>
+          )
+          }
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  ThemesWrapper: {
-    flex: 1,
-    width: '100%',
-    backgroundColor: 'white',
-    gap: 20
-  },
   supervisorList:{
     paddingBottom: 100
   },

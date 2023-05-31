@@ -106,6 +106,55 @@ async function getTags(authToken, setTags, searchQuery){
     }
 }
 
+async function getSupervisor(authToken, setSupervisor, id){
+  if(authToken == null){
+    return;
+  }else{
+    if(id == null){
+      try{
+        const response = await fetch(`${API_URL}/supervisor/null`, {
+          method: "get",
+          headers: {
+            "Authorization": authToken,
+          }
+        })
+  
+        if (!response.ok) {
+          const message = `An error has occured: ${response.status} - ${response.statusText}`;
+          throw new Error(message);
+        }
+  
+        const json = await response.json();
+        setSupervisor(json);
+  
+      } catch(error){
+        
+      }
+    }
+    else{
+      try{
+        const response = await fetch(`${API_URL}/supervisor/${id}`, {
+          method: "get",
+          headers: {
+            "Authorization": authToken,
+          }
+        })
+  
+        if (!response.ok) {
+          const message = `An error has occured: ${response.status} - ${response.statusText}`;
+          throw new Error(message);
+        }
+  
+        const json = await response.json();
+        setSupervisor(json);
+  
+      } catch(error){
+        
+      }
+    }
+    }
+}
+
 async function getSupervisorFromText(authToken, setSupervisors, ids){
   if(authToken == null){
     return;
@@ -248,4 +297,4 @@ async function deleteToken() {
   }
 }
 
-export { logIn, validateToken, logOut, getRole, getSupervisors, getTags, getSupervisorFromText };
+export { logIn, validateToken, logOut, getRole, getSupervisors, getTags, getSupervisorFromText, getSupervisor };

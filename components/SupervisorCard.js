@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   tagCardText:{
-    fontSize: 12,
+    fontSize: 14,
     color: 'white'
   }
 });
