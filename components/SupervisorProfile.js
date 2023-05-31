@@ -4,7 +4,7 @@ import { StyleSheet, Text, ScrollView, TouchableOpacity, Pressable, FlatList, Vi
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { getSupervisor } from '../Api';
+import { getSupervisor, getTags } from '../Api';
 import { TokenContext } from '../App';
 import SupervisorCard from './SupervisorCard';
 import FilterOptions from './FilterOptions';
@@ -12,6 +12,8 @@ import SupervisorsStudent from './SupervisorsStudent';
 
 export default function SupervisorProfile() {
   const [supervisor, setSupervisor] = useState(null);
+  const [tags, setTags] = useState([]);
+  const [filteredTags, setFilteredTags] = useState([]);
   const [showEditTags, setShowEditTags] = useState(false);
 
   const{
@@ -20,9 +22,21 @@ export default function SupervisorProfile() {
     role
   } = useContext(TokenContext);
 
+  function filterTags(){
+    const filtered = tags.filter(tag1 => !supervisor.tags.some(tag2 => tag2.id === tag1.id));
+    setFilteredTags(filtered);
+  };
+
   useEffect(() => {
-    getSupervisor(authToken, setSupervisor, null)
+    getSupervisor(authToken, setSupervisor, null);
+    getTags(authToken, setTags, null)
   }, []);
+
+  useEffect(() => {
+    if(tags != [] && supervisor != null){
+      filterTags();
+    }
+  }, [tags, supervisor]);
 
   return (
     <>
@@ -48,6 +62,19 @@ export default function SupervisorProfile() {
           />
         </View>
         <View style={styles.br}></View>
+        <View style={styles.allTagsList}>
+          <FlatList
+            data={filteredTags}
+            renderItem={
+              ({item}) => 
+                <View style={styles.tagCardOptions}>
+                  <Text style={styles.tagCardText}>{item.title}</Text>
+                  <Ionicons name="checkmark" size={18} color="rgba(255,255,255, 0.3)" />
+                </View>
+            }
+            keyExtractor={item => item.id}
+          />
+        </View>
       </View>
     ):(
       <>
@@ -181,5 +208,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 3,
     borderColor: 'white',
     marginHorizontal: 40
+  },
+  allTagsList:{
+    marginHorizontal: 10,
+    marginVertical: 10,
   }
 });
