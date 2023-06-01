@@ -4,7 +4,7 @@ import { StyleSheet, Text, ScrollView, TouchableOpacity, Pressable, FlatList, Vi
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { getSupervisor, getTags } from '../Api';
+import { getSupervisor, getTags, removeTagsFromSupervisor, addTagsFromSupervisor } from '../Api';
 import { TokenContext } from '../App';
 import SupervisorCard from './SupervisorCard';
 import FilterOptions from './FilterOptions';
@@ -16,6 +16,9 @@ export default function SupervisorProfile() {
   const [filteredTags, setFilteredTags] = useState([]);
   const [showEditTags, setShowEditTags] = useState(false);
 
+  const [selectedNewTags, setSelectedNewTags] = useState([]);
+  const [tagsToRemove, setTagsToRemove] = useState([]);
+
   const{
     authToken,
     setAuthToken,
@@ -26,6 +29,38 @@ export default function SupervisorProfile() {
     const filtered = tags.filter(tag1 => !supervisor.tags.some(tag2 => tag2.id === tag1.id));
     setFilteredTags(filtered);
   };
+
+  function toggleSelectedNewTags(tag){
+    if(selectedNewTags.includes(tag)){
+      setSelectedNewTags(selectedNewTags.filter(item => item !== tag));
+    }else{
+      setSelectedNewTags(prevItems => [...prevItems, tag]);
+    }
+  };
+
+  function toggleRemoveTag(tag){
+    if(tagsToRemove.includes(tag)){
+      setTagsToRemove(tagsToRemove.filter(item => item !== tag));
+    }else{
+      setTagsToRemove(prevItems => [...prevItems, tag]);
+    }
+  }
+
+  function closeEditTags(){
+    setSelectedNewTags([]);
+    setTagsToRemove([]);
+    setShowEditTags(false);
+  }
+
+  function processEditTags(){
+    if(tagsToRemove.length >0){
+      removeTagsFromSupervisor(authToken, setSupervisor, tagsToRemove.map(obj => obj.id))
+    }
+    if(selectedNewTags.length >0){
+      addTagsFromSupervisor(authToken, setSupervisor, selectedNewTags.map(obj => obj.id))
+    }
+    closeEditTags();
+  }
 
   useEffect(() => {
     getSupervisor(authToken, setSupervisor, null);
@@ -45,17 +80,25 @@ export default function SupervisorProfile() {
         <View style={styles.activeTagsList}>
           <View style={styles.activeTagsListHeader}>
             <Text style={styles.activeTagListTitle}>Eigene Tags:</Text>
-            <Pressable onPress={() => setShowEditTags(false)}>
-              <Ionicons name="close" size={20} color="white" />
-            </Pressable>
+            <View style={{flexDirection: 'row', gap: 5}}>
+              <Pressable onPress={() => closeEditTags()}>
+                <Ionicons name="close" size={20} color="white" />
+              </Pressable>
+              <Pressable onPress={() => processEditTags()}>
+                <Ionicons name="checkmark" size={20} color="white" />
+              </Pressable>
+            </View>
           </View>
           <FlatList
             data={supervisor.tags}
             renderItem={
               ({item}) => 
-                <View style={styles.tagCardOptions}>
+                <View style={[styles.tagCardOptions,
+                    tagsToRemove.some(tag=> tag.id === item.id) ? styles.tagToDelete : null ]}>
                   <Text style={styles.tagCardText}>{item.title}</Text>
-                  <Ionicons name="trash-outline" size={18} color="white" />
+                  <Pressable onPress={() => toggleRemoveTag(item)}>
+                    <Ionicons name="trash-outline" size={18} color="white" />
+                  </Pressable>
                 </View>
               }
             keyExtractor={item => item.id}
@@ -67,10 +110,15 @@ export default function SupervisorProfile() {
             data={filteredTags}
             renderItem={
               ({item}) => 
-                <View style={styles.tagCardOptions}>
+                <Pressable style={styles.tagCardOptions} onPress={() => toggleSelectedNewTags(item)}>
                   <Text style={styles.tagCardText}>{item.title}</Text>
-                  <Ionicons name="checkmark" size={18} color="rgba(255,255,255, 0.3)" />
-                </View>
+                  {selectedNewTags.some(tag=> tag.id === item.id) ? (
+                    <Ionicons name="checkmark" size={18} color="rgba(255,255,255, 1)" />
+                  ):(
+                    <Ionicons name="checkmark" size={18} color="rgba(255,255,255, 0.3)" />
+
+                  )}
+                </Pressable>
             }
             keyExtractor={item => item.id}
           />
@@ -212,5 +260,8 @@ const styles = StyleSheet.create({
   allTagsList:{
     marginHorizontal: 10,
     marginVertical: 10,
+  },
+  tagToDelete:{
+    backgroundColor: 'red'
   }
 });

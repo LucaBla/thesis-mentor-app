@@ -181,6 +181,74 @@ async function getSupervisorFromText(authToken, setSupervisors, ids){
   }
 }
 
+async function addTagsFromSupervisor(authToken, setSupervisor, ids){
+  if(authToken == null){
+    return;
+  }
+
+  const IdsData = {
+    tags:{
+      ids: ids
+    }
+  }
+
+  try{
+    const response = await fetch(`${API_URL}/supervisor/add_tags`, {
+      method: "post",
+      headers: {
+        "Authorization": authToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(IdsData),
+    })
+
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status} - ${response.statusText}`;
+      throw new Error(message);
+    }
+
+    const json = await response.json();
+    setSupervisor(json);
+
+  }catch(error){
+        
+      }
+}
+
+async function removeTagsFromSupervisor(authToken, setSupervisor, ids){
+  if(authToken == null){
+    return;
+  }
+
+  const IdsData = {
+    tags:{
+      ids: ids
+    }
+  }
+
+  try{
+    const response = await fetch(`${API_URL}/supervisor/remove_tags`, {
+      method: "post",
+      headers: {
+        "Authorization": authToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(IdsData),
+    })
+
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status} - ${response.statusText}`;
+      throw new Error(message);
+    }
+
+    const json = await response.json();
+    setSupervisor(json);
+
+  }catch(error){
+        
+      }
+}
+
 async function validateToken(authToken, setIsValidAuthToken){
   if(authToken == null){
     setIsValidAuthToken(false);
@@ -297,4 +365,14 @@ async function deleteToken() {
   }
 }
 
-export { logIn, validateToken, logOut, getRole, getSupervisors, getTags, getSupervisorFromText, getSupervisor };
+export { logIn, 
+         validateToken, 
+         logOut, 
+         getRole, 
+         getSupervisors, 
+         getTags, 
+         getSupervisorFromText, 
+         getSupervisor, 
+         removeTagsFromSupervisor,
+         addTagsFromSupervisor
+       };

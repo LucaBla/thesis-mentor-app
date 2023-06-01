@@ -81,7 +81,7 @@ export default function SupervisorsStudent() {
 
 const styles = StyleSheet.create({
   supervisorList:{
-    paddingBottom: 100
+    paddingBottom: 120
   },
   supervisorCard: {
     backgroundColor: '#0F4D7E',
