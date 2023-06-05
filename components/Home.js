@@ -11,7 +11,7 @@ import Supervisors from './Supervisors';
 import Chats from './Chats';
 import Navbar from './Navbar';
 
-export default function Home() {
+export default function Home({navigation}) {
   const [loading, setLoading] = useState(false);
   const [activeSection, setActiveSection] = useState('themes');
 
@@ -30,7 +30,9 @@ export default function Home() {
         <></>
       )}
       {activeSection === 'themes'? (
-        <Themes/>
+        <Themes
+          navigation={navigation}
+        />
       ):(
         <></>
       )}

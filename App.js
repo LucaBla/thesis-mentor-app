@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { validateToken, getRole } from './Api';
 import * as SecureStore from 'expo-secure-store';
+import CreateTheme from './components/CreateTheme';
 
 export const TokenContext = createContext(null);
 
@@ -48,7 +49,10 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isValidAuthToken? (
-          <Stack.Screen name="Topics" component={Home}/> 
+          <>
+            <Stack.Screen name="Topics" component={Home}/> 
+            <Stack.Screen name="CreateTheme" component={CreateTheme}/> 
+          </>
         ):(
           <Stack.Screen name="LogIn" component={LogIn}/> 
         )}

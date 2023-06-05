@@ -7,14 +7,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { getSupervisor, getTags, removeTagsFromSupervisor, addTagsFromSupervisor } from '../Api';
 import { TokenContext } from '../App';
 import SupervisorCard from './SupervisorCard';
-import EditTags from './EditTags';
+import FilterOptions from './FilterOptions';
 import SupervisorsStudent from './SupervisorsStudent';
 
-export default function SupervisorProfile() {
-  const [supervisor, setSupervisor] = useState(null);
-  const [tags, setTags] = useState([]);
+export default function EditTags({tags, supervisor, setSupervisor, closeEditTags}) {
   const [filteredTags, setFilteredTags] = useState([]);
-  const [showEditTags, setShowEditTags] = useState(false);
 
   const [selectedNewTags, setSelectedNewTags] = useState([]);
   const [tagsToRemove, setTagsToRemove] = useState([]);
@@ -30,65 +27,88 @@ export default function SupervisorProfile() {
     setFilteredTags(filtered);
   };
 
-  function closeEditTags(){
-    setSelectedNewTags([]);
-    setTagsToRemove([]);
-    setShowEditTags(false);
+  function toggleSelectedNewTags(tag){
+    if(selectedNewTags.includes(tag)){
+      setSelectedNewTags(selectedNewTags.filter(item => item !== tag));
+    }else{
+      setSelectedNewTags(prevItems => [...prevItems, tag]);
+    }
+  };
+
+  function toggleRemoveTag(tag){
+    if(tagsToRemove.includes(tag)){
+      setTagsToRemove(tagsToRemove.filter(item => item !== tag));
+    }else{
+      setTagsToRemove(prevItems => [...prevItems, tag]);
+    }
+  }
+
+  function processEditTags(){
+    if(tagsToRemove.length >0){
+      removeTagsFromSupervisor(authToken, setSupervisor, tagsToRemove.map(obj => obj.id))
+    }
+    if(selectedNewTags.length >0){
+      addTagsFromSupervisor(authToken, setSupervisor, selectedNewTags.map(obj => obj.id))
+    }
+    closeEditTags();
   }
 
   useEffect(() => {
-    getSupervisor(authToken, setSupervisor, null);
-    getTags(authToken, setTags, null)
-  }, []);
+    if(tags != [] && supervisor != null){
+      filterTags();
+    }
+  }, [tags, supervisor]);
 
-  return (
-    <>
-    {showEditTags ? (
-      <EditTags
-        tags={tags}
-        supervisor={supervisor}
-        setSupervisor={setSupervisor}
-        closeEditTags={closeEditTags}
-      />
-    ):(
-      <>
-      {supervisor ? (
-      <View>
-        <View style={styles.profileHeader}>
-          <Image
-            style={styles.userImg}
-            source={require('../assets/user_img.png')}
-          />
-          <View style={styles.supervisorName}>
-            <Text style={styles.supervisorNameText}>{supervisor.first_name}</Text>
-            <Text style={styles.supervisorNameText}>{supervisor.last_name}</Text>
+  return(
+    <View style={styles.tagEditWrapper}>
+        <View style={styles.activeTagsList}>
+          <View style={styles.activeTagsListHeader}>
+            <Text style={styles.activeTagListTitle}>Eigene Tags:</Text>
+            <View style={{flexDirection: 'row', gap: 5}}>
+              <Pressable onPress={() => closeEditTags()}>
+                <Ionicons name="close" size={20} color="white" />
+              </Pressable>
+              <Pressable onPress={() => processEditTags()}>
+                <Ionicons name="checkmark" size={20} color="white" />
+              </Pressable>
+            </View>
           </View>
-        </View>
-        <View style={styles.tagsWrapper}>
-          <View style={styles.tagHeader}>
-          <Text style={styles.tagLabel}>Tags:</Text>
-          <Pressable onPress={() =>setShowEditTags(true)}>
-            <Ionicons name="build-outline" size={18} color="white" />
-          </Pressable>
-          </View>
-          <ScrollView contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', gap: 5 }}>
-              {supervisor.tags.map(({title}) =>(
-                
-                <View style={styles.tagCard}>
-                  <Text style={styles.tagCardText}>{title}</Text>
+          <FlatList
+            data={supervisor.tags}
+            renderItem={
+              ({item}) => 
+                <View style={[styles.tagCardOptions,
+                    tagsToRemove.some(tag=> tag.id === item.id) ? styles.tagToDelete : null ]}>
+                  <Text style={styles.tagCardText}>{item.title}</Text>
+                  <Pressable onPress={() => toggleRemoveTag(item)}>
+                    <Ionicons name="trash-outline" size={18} color="white" />
+                  </Pressable>
                 </View>
-              ))}
-          </ScrollView>
+              }
+            keyExtractor={item => item.id}
+          />
+        </View>
+        <View style={styles.br}></View>
+        <View style={styles.allTagsList}>
+          <FlatList
+            data={filteredTags}
+            renderItem={
+              ({item}) => 
+                <Pressable style={styles.tagCardOptions} onPress={() => toggleSelectedNewTags(item)}>
+                  <Text style={styles.tagCardText}>{item.title}</Text>
+                  {selectedNewTags.some(tag=> tag.id === item.id) ? (
+                    <Ionicons name="checkmark" size={18} color="rgba(255,255,255, 1)" />
+                  ):(
+                    <Ionicons name="checkmark" size={18} color="rgba(255,255,255, 0.3)" />
+
+                  )}
+                </Pressable>
+            }
+            keyExtractor={item => item.id}
+          />
         </View>
       </View>
-    ):(
-      <Text>Loading...</Text>
-    )
-    }
-      </>
-    )}
-    </>
-  );
+  )
 }
 
 const styles = StyleSheet.create({

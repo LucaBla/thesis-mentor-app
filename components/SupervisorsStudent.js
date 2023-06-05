@@ -20,24 +20,6 @@ export default function SupervisorsStudent() {
     role
   } = useContext(TokenContext);
 
-  const DATA = [
-    {
-      email: 'udo@test.de',
-      first_name: 'Udo',
-      last_name: 'Lustig'
-    },
-    {
-      email: 'Marko@test.de',
-      first_name: 'Marko',
-      last_name: 'Hellmann'
-    },
-    {
-      email: 'guenter@test.de',
-      first_name: 'Günter',
-      last_name: 'Witzig'
-    },
-  ];
-
   useEffect(() => {
     getSupervisors(authToken, setSupervisors)
   }, []);
@@ -46,6 +28,7 @@ export default function SupervisorsStudent() {
     <>
       {showFilterOptions == true ? (
         <FilterOptions 
+          page={'Supervisors'}
           authToken={authToken} 
           setShowFilterOptions={setShowFilterOptions} 
           setSupervisors={setSupervisors}

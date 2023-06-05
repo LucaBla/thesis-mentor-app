@@ -57,6 +57,58 @@ async function getSupervisors(authToken, setSupervisors){
   }
 }
 
+async function getThemes(authToken, setThemes){
+  if(authToken == null){
+    return;
+  }else{
+    try{
+      const response = await fetch(`${API_URL}/theme`, {
+        method: "get",
+        headers: {
+          "Authorization": authToken,
+        }
+      })
+
+      if (!response.ok) {
+        const message = `An error has occured: ${response.status} - ${response.statusText}`;
+        throw new Error(message);
+      }
+
+      const json = await response.json();
+      setThemes(json);
+
+    } catch(error){
+      
+    }
+  }
+}
+
+async function getMyThemes(authToken, setThemes){
+  if(authToken == null){
+    return;
+  }else{
+    try{
+      const response = await fetch(`${API_URL}/supervisor/themes`, {
+        method: "get",
+        headers: {
+          "Authorization": authToken,
+        }
+      })
+
+      if (!response.ok) {
+        const message = `An error has occured: ${response.status} - ${response.statusText}`;
+        throw new Error(message);
+      }
+
+      const json = await response.json();
+      setThemes(json);
+
+    } catch(error){
+      
+    }
+  }
+}
+
 async function getTags(authToken, setTags, searchQuery){
   console.log('test');
   if(authToken == null){
@@ -174,6 +226,58 @@ async function getSupervisorFromText(authToken, setSupervisors, ids){
 
       const json = await response.json();
       setSupervisors(json);
+
+    } catch(error){
+      
+    }
+  }
+}
+
+async function getThemeFromText(authToken, setTheme, ids){
+  if(authToken == null){
+    return;
+  }else{
+    try{
+      const response = await fetch(`${API_URL}/theme?ids[]=` + ids.join("&ids[]="), {
+        method: "get",
+        headers: {
+          "Authorization": authToken,
+        }
+      })
+
+      if (!response.ok) {
+        const message = `An error has occured: ${response.status} - ${response.statusText}`;
+        throw new Error(message);
+      }
+
+      const json = await response.json();
+      setTheme(json);
+
+    } catch(error){
+      
+    }
+  }
+}
+
+async function getMyThemeFromText(authToken, setTheme, ids){
+  if(authToken == null){
+    return;
+  }else{
+    try{
+      const response = await fetch(`${API_URL}/supervisor/themes?ids[]=` + ids.join("&ids[]="), {
+        method: "get",
+        headers: {
+          "Authorization": authToken,
+        }
+      })
+
+      if (!response.ok) {
+        const message = `An error has occured: ${response.status} - ${response.statusText}`;
+        throw new Error(message);
+      }
+
+      const json = await response.json();
+      setTheme(json);
 
     } catch(error){
       
@@ -313,6 +417,7 @@ async function logIn(email, password, setAuthToken, setLoading){
     }
 
   }catch(error){
+    console.log(error);
         let toast = Toast.show('Login Failed.', {
           duration: Toast.durations.SHORT,
           position: Toast.positions.TOP  + 80
@@ -374,5 +479,9 @@ export { logIn,
          getSupervisorFromText, 
          getSupervisor, 
          removeTagsFromSupervisor,
-         addTagsFromSupervisor
+         addTagsFromSupervisor,
+         getThemes,
+         getMyThemes,
+         getThemeFromText,
+         getMyThemeFromText
        };

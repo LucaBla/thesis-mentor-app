@@ -4,16 +4,26 @@ import { StyleSheet, Text, ScrollView, TouchableOpacity, Pressable, FlatList, Vi
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { getTags, getSupervisorFromText } from '../Api';
+import { getTags, getSupervisorFromText, getThemeFromText, getMyThemeFromText } from '../Api';
 import TagCardFilter from './TagCardFilter';
 
-export default function FilterOptions({authToken, setShowFilterOptions, setSupervisors, activeTags, setActiveTags}){
+export default function FilterOptions({page, authToken, setShowFilterOptions, setSupervisors, setThemes, activeTags, setActiveTags}){
   const [tags, setTags] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   function closeFilterOptions(){
-    getSupervisorFromText(authToken, setSupervisors, activeTags);
-    setShowFilterOptions(false);
+    if(page == "Supervisors"){
+      getSupervisorFromText(authToken, setSupervisors, activeTags);
+      setShowFilterOptions(false);
+    }
+    if(page == "Themes"){
+      getThemeFromText(authToken, setThemes, activeTags);
+      setShowFilterOptions(false);
+    }
+    if(page == "MyThemes"){
+      getMyThemeFromText(authToken, setThemes, activeTags);
+      setShowFilterOptions(false);
+    }
   }
 
   useEffect(() => {
