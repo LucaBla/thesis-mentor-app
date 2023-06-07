@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { getTags, getSupervisorFromText, getThemeFromText, getMyThemeFromText } from '../Api';
 import TagCardFilter from './TagCardFilter';
 
-export default function FilterOptions({page, authToken, setShowFilterOptions, setSupervisors, setThemes, activeTags, setActiveTags}){
+export default function FilterOptions({page, authToken, setShowFilterOptions, setSupervisors, setThemes, activeTags, setActiveTags, setNewThemeTags}){
   const [tags, setTags] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -22,6 +22,13 @@ export default function FilterOptions({page, authToken, setShowFilterOptions, se
     }
     if(page == "MyThemes"){
       getMyThemeFromText(authToken, setThemes, activeTags);
+      setShowFilterOptions(false);
+    }
+    if(page == "CreateTheme"){
+      const newThemeTags = tags.filter(function(tag) {
+        return activeTags.includes(tag.id);
+      });
+      setNewThemeTags(newThemeTags);
       setShowFilterOptions(false);
     }
   }

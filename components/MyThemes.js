@@ -42,7 +42,7 @@ export default function MyThemes({navigation}) {
             <Ionicons name="filter" size={20} color="black" />
           </Pressable>
           <Pressable style={styles.addButton} onPress={() => navigation.navigate('CreateTheme')}>
-          <Ionicons name="add-sharp" size={24} color="white" />
+            <Ionicons name="add-sharp" size={24} color="white" />
           </Pressable>
           <View style={styles.themesList}>
             <FlatList

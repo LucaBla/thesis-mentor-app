@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   themeSelector:{
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: '#4DA1C7',
+    backgroundColor: '#0F4D7E',
   },
   themeSelectorText:{
     color: 'white'
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   },
   active:{
     paddingVertical: 10,
-    backgroundColor: '#59B3DC',
+    backgroundColor: '#15609B',
     width: '50%',
     textAlign: 'center',
     justifyContent: 'center',
