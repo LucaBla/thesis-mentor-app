@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { StyleSheet, Text, View, FlatList, Pressable } from 'react-native';
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
@@ -9,6 +9,7 @@ import { TokenContext } from '../App';
 import { getMyThemes } from '../Api';
 import ThemeCard from './ThemeCard';
 import FilterOptions from './FilterOptions';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function MyThemes({navigation}) {
   const [themes, setThemes] = useState([]);
@@ -24,6 +25,12 @@ export default function MyThemes({navigation}) {
   useEffect(() => {
     getMyThemes(authToken, setThemes)
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getMyThemes(authToken, setThemes)
+    }, [])
+  )
 
   return (
     <>
@@ -69,7 +76,8 @@ const styles = StyleSheet.create({
    
   },
   themesList: {
-    paddingVertical: -20
+    paddingVertical: -20,
+    paddingBottom: 230,
   },
   filterButton:{
     alignSelf: 'flex-end',

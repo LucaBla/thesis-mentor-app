@@ -285,6 +285,41 @@ async function getMyThemeFromText(authToken, setTheme, ids){
   }
 }
 
+async function postTheme(authToken, title, description, tag_ids){
+  if(authToken == null){
+    return;
+  }
+
+  const themeData = {
+    theme:{
+      title: title,
+      description: description,
+      tag_ids: tag_ids
+    }
+  }
+
+  try{
+    const response = await fetch(`${API_URL}/theme`, {
+      method: "post",
+      headers: {
+        "Authorization": authToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(themeData),
+    })
+
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status} - ${response.statusText}`;
+      throw new Error(message);
+    }
+
+    const json = await response.json();
+
+  }catch(error){
+        
+      }
+}
+
 async function addTagsFromSupervisor(authToken, setSupervisor, ids){
   if(authToken == null){
     return;
@@ -483,5 +518,6 @@ export { logIn,
          getThemes,
          getMyThemes,
          getThemeFromText,
-         getMyThemeFromText
+         getMyThemeFromText,
+         postTheme
        };

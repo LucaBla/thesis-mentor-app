@@ -9,6 +9,7 @@ import { TokenContext } from '../App';
 import { getMyThemes } from '../Api';
 import ThemeCard from './ThemeCard';
 import FilterOptions from './FilterOptions';
+import { postTheme } from '../Api';
 
 export default function CreateTheme({navigation}) {
   const [title, setTitle] = useState('');
@@ -23,6 +24,11 @@ export default function CreateTheme({navigation}) {
     setAuthToken,
     role
   } = useContext(TokenContext);
+
+  function createTheme(){
+    postTheme(authToken, title, description, activeTags);
+    navigation.goBack()
+  }
 
   useEffect(() => {
     
@@ -45,7 +51,7 @@ export default function CreateTheme({navigation}) {
             <Pressable onPress={() => navigation.goBack()}>
               <Ionicons name="arrow-back-outline" size={24} color="black" />
             </Pressable>
-            <Pressable>
+            <Pressable onPress={() => createTheme()}>
               <Ionicons name="save-outline" size={24} color="black" />
             </Pressable>
           </View>

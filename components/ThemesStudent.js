@@ -66,7 +66,8 @@ const styles = StyleSheet.create({
    
   },
   themesList: {
-    paddingVertical: -20
+    paddingVertical: -20,
+    paddingBottom: 60,
   },
   filterButton:{
     alignSelf: 'flex-end',
