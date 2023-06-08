@@ -285,6 +285,32 @@ async function getMyThemeFromText(authToken, setTheme, ids){
   }
 }
 
+async function getChats(authToken, setChats){
+  if(authToken == null){
+    return;
+  }else{
+    try{
+      const response = await fetch(`${API_URL}/chats`, {
+        method: "get",
+        headers: {
+          "Authorization": authToken,
+        }
+      })
+
+      if (!response.ok) {
+        const message = `An error has occured: ${response.status} - ${response.statusText}`;
+        throw new Error(message);
+      }
+
+      const json = await response.json();
+      setChats(json);
+
+    } catch(error){
+      
+    }
+  }
+}
+
 async function postTheme(authToken, title, description, tag_ids){
   if(authToken == null){
     return;
@@ -519,5 +545,6 @@ export { logIn,
          getMyThemes,
          getThemeFromText,
          getMyThemeFromText,
-         postTheme
+         postTheme,
+         getChats
        };
