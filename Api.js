@@ -311,6 +311,55 @@ async function getChats(authToken, setChats){
   }
 }
 
+async function getStatuses(authToken, setStatuses, searchQuery){
+  if(authToken == null){
+    return
+  }
+  else{
+    if(searchQuery !== null){
+          try{
+            const response = await fetch(`${API_URL}/statuses?title=` +searchQuery, {
+              method: "get",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": authToken,
+              },
+            })
+            if (!response.ok) {
+              const message = `An error has occured: ${response.status} - ${response.statusText}`;
+              throw new Error(message);
+            }
+      
+            const json = await response.json();
+            setStatuses(json);
+      
+          } catch(error){
+            console.log(error);
+          }
+        }else{
+          try{
+            const response = await fetch(`${API_URL}/statuses`, {
+              method: "get",
+              headers: {
+                "Authorization": authToken,
+              }
+            })
+      
+            if (!response.ok) {
+              const message = `An error has occured: ${response.status} - ${response.statusText}`;
+              throw new Error(message);
+            }
+      
+            const json = await response.json();
+            setStatuses(json);
+      
+          } catch(error){
+            
+          }
+        }
+  }
+}
+
 async function postTheme(authToken, title, description, tag_ids){
   if(authToken == null){
     return;
@@ -546,5 +595,6 @@ export { logIn,
          getThemeFromText,
          getMyThemeFromText,
          postTheme,
-         getChats
+         getChats,
+         getStatuses
        };

@@ -7,9 +7,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { getChats } from '../Api';
 import { TokenContext } from '../App';
 import ChatCard from './ChatCard';
+import FilterOptionsChat from './FilterOptionsChat';
 
 export default function Chats() {
   const [chats, setChats] = useState([]);
+  const [activeTags, setActiveTags] = useState([]);
 
   const [showFilterOptions, setShowFilterOptions] = useState(false);
   
@@ -26,13 +28,11 @@ export default function Chats() {
   return (
     <>
     {showFilterOptions == true ? (
-      <FilterOptions 
-        page={'Supervisors'}
-        // authToken={authToken} 
-        // setShowFilterOptions={setShowFilterOptions} 
-        // setSupervisors={setSupervisors}
-        // activeTags={activeTags}
-        // setActiveTags={setActiveTags}
+      <FilterOptionsChat
+        authToken={authToken} 
+        setShowFilterOptions={setShowFilterOptions} 
+        activeTags={activeTags}
+        setActiveTags={setActiveTags}
       />
     ):(
       <View>
