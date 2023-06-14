@@ -285,6 +285,46 @@ async function getMyThemeFromText(authToken, setTheme, ids){
   }
 }
 
+async function getChatsFromText(authToken, setChats, idsStatus, idsBillingStatus){
+  if(authToken == null){
+    return;
+  }else{
+    let SERVERURL = ''
+    if(idsStatus.length > 0){
+      SERVERURL = `${API_URL}/chats?status_ids[]=`
+    }
+    else if(idsBillingStatus.length > 0){
+      SERVERURL = `${API_URL}/chats?billing_status_ids[]=`
+    }
+    else{
+      SERVERURL = `${API_URL}/chats?status_ids[]=`
+    }
+    try{
+      const response = await fetch(SERVERURL + idsStatus.join("&status_ids[]=") + "&billing_status_ids[]="
+                                                     + idsBillingStatus.join("&billing_status_ids[]="), {
+        method: "get",
+        headers: {
+          "Authorization": authToken,
+        }
+      })
+
+      console.log(SERVERURL + idsStatus.join("&status_ids[]=") + "&billing_status_ids[]="
+      + idsBillingStatus.join("&billing_status_ids[]="));
+
+      if (!response.ok) {
+        const message = `An error has occured: ${response.status} - ${response.statusText}`;
+        throw new Error(message);
+      }
+
+      const json = await response.json();
+      setChats(json);
+
+    } catch(error){
+      
+    }
+  }
+}
+
 async function getChats(authToken, setChats){
   if(authToken == null){
     return;
@@ -352,6 +392,55 @@ async function getStatuses(authToken, setStatuses, searchQuery){
       
             const json = await response.json();
             setStatuses(json);
+      
+          } catch(error){
+            
+          }
+        }
+  }
+}
+
+async function getBillingStatuses(authToken, setBillingStatuses, searchQuery){
+  if(authToken == null){
+    return
+  }
+  else{
+    if(searchQuery !== null){
+          try{
+            const response = await fetch(`${API_URL}/billing_statuses?title=` +searchQuery, {
+              method: "get",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": authToken,
+              },
+            })
+            if (!response.ok) {
+              const message = `An error has occured: ${response.status} - ${response.statusText}`;
+              throw new Error(message);
+            }
+      
+            const json = await response.json();
+            setBillingStatuses(json);
+      
+          } catch(error){
+            console.log(error);
+          }
+        }else{
+          try{
+            const response = await fetch(`${API_URL}/billing_statuses`, {
+              method: "get",
+              headers: {
+                "Authorization": authToken,
+              }
+            })
+      
+            if (!response.ok) {
+              const message = `An error has occured: ${response.status} - ${response.statusText}`;
+              throw new Error(message);
+            }
+      
+            const json = await response.json();
+            setBillingStatuses(json);
       
           } catch(error){
             
@@ -596,5 +685,7 @@ export { logIn,
          getMyThemeFromText,
          postTheme,
          getChats,
-         getStatuses
+         getStatuses,
+         getBillingStatuses,
+         getChatsFromText
        };

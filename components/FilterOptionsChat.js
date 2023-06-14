@@ -4,26 +4,37 @@ import { StyleSheet, Text, ScrollView, TouchableOpacity, Pressable, FlatList, Vi
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { getStatuses, getSupervisorFromText, getThemeFromText, getMyThemeFromText } from '../Api';
+import { getStatuses, getBillingStatuses, getChatsFromText } from '../Api';
 import TagCardFilter from './TagCardFilter';
 
-export default function FilterOptionsChat({page, authToken, setShowFilterOptions, setSupervisors, setThemes, activeTags, setActiveTags, setNewThemeTags}){
+export default function FilterOptionsChat({authToken, 
+                                           setShowFilterOptions, activeTagsStatus, setActiveTagsStatus,
+                                           activeTagsBillingStatus, setActiveTagsBillingStatus, setChats}){
   const [statuses, setStatuses] = useState([]);
+  const [billingStatuses, setBillingStatuses] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   const [statusesIsOpen, setStatusesIsOpen] = useState(false);
   const [billingStatusesIsOpen, setBillingStatusesIsOpen] = useState(false);
 
   function closeFilterOptions(){
+    getChatsFromText(authToken, setChats, activeTagsStatus, activeTagsBillingStatus);
     setShowFilterOptions(false);
+  }
+
+  function clearActiveTags(){
+    setActiveTagsStatus([]);
+    setActiveTagsBillingStatus([]);
   }
 
   useEffect(() => {
     getStatuses(authToken, setStatuses, null);
+    getBillingStatuses(authToken, setBillingStatuses, null);
   }, []);
 
   useEffect(() => {
     getStatuses(authToken, setStatuses, searchQuery);
+    getBillingStatuses(authToken, setBillingStatuses, searchQuery);
   }, [searchQuery]);
 
   return(
@@ -39,7 +50,7 @@ export default function FilterOptionsChat({page, authToken, setShowFilterOptions
         onChangeText={setSearchQuery}
         value={searchQuery}         
       />
-      <Pressable style={styles.clearButton} onPress={() => setActiveTags([])}>
+      <Pressable style={styles.clearButton} onPress={() => clearActiveTags()}>
         <Text style={styles.clearButtonText}>Clear</Text>
       </Pressable>
       <Pressable style={styles.statusHeader} onPress={() => setStatusesIsOpen(!statusesIsOpen)}>
@@ -57,7 +68,7 @@ export default function FilterOptionsChat({page, authToken, setShowFilterOptions
           data={statuses}
           renderItem={
             ({item}) => 
-            <TagCardFilter id={item.id} title={item.title} activeTags={activeTags} setActiveTags={setActiveTags}/>
+            <TagCardFilter id={item.id} title={item.title} activeTags={activeTagsStatus} setActiveTags={setActiveTagsStatus}/>
           }
           ItemSeparatorComponent={() => <View style={{height: 10}} />}
         />
@@ -77,10 +88,10 @@ export default function FilterOptionsChat({page, authToken, setShowFilterOptions
       {billingStatusesIsOpen ? (
         <FlatList
           style={styles.tagList}
-          data={statuses}
+          data={billingStatuses}
           renderItem={
             ({item}) => 
-            <TagCardFilter id={item.id} title={item.title} activeTags={activeTags} setActiveTags={setActiveTags}/>
+            <TagCardFilter id={item.id} title={item.title} activeTags={activeTagsBillingStatus} setActiveTags={setActiveTagsBillingStatus}/>
           }
           ItemSeparatorComponent={() => <View style={{height: 10}} />}
         />

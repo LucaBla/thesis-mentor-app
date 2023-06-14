@@ -11,7 +11,8 @@ import FilterOptionsChat from './FilterOptionsChat';
 
 export default function Chats() {
   const [chats, setChats] = useState([]);
-  const [activeTags, setActiveTags] = useState([]);
+  const [activeTagsStatus, setActiveTagsStatus] = useState([]);
+  const [activeTagsBillingStatus, setActiveTagsBillingStatus] = useState([]);
 
   const [showFilterOptions, setShowFilterOptions] = useState(false);
   
@@ -31,8 +32,11 @@ export default function Chats() {
       <FilterOptionsChat
         authToken={authToken} 
         setShowFilterOptions={setShowFilterOptions} 
-        activeTags={activeTags}
-        setActiveTags={setActiveTags}
+        activeTagsStatus={activeTagsStatus}
+        setActiveTagsStatus={setActiveTagsStatus}
+        activeTagsBillingStatus={activeTagsBillingStatus}
+        setActiveTagsBillingStatus={setActiveTagsBillingStatus}
+        setChats={setChats}
       />
     ):(
       <View>
