@@ -9,7 +9,7 @@ import { TokenContext } from '../App';
 import ChatCard from './ChatCard';
 import FilterOptionsChat from './FilterOptionsChat';
 
-export default function Chats() {
+export default function Chats({navigation}) {
   const [chats, setChats] = useState([]);
   const [activeTagsStatus, setActiveTagsStatus] = useState([]);
   const [activeTagsBillingStatus, setActiveTagsBillingStatus] = useState([]);
@@ -49,11 +49,13 @@ export default function Chats() {
             renderItem={
               ({item}) => 
               <ChatCard 
+                id={item.id}
                 theme={item.theme} 
                 status={item.status} 
                 billingStatus={item.billing_status}
                 student={item.student}
                 supervisor={item.supervisor}
+                navigation={navigation}
               />
             }
             keyExtractor={item => item.id}

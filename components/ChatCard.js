@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { getSupervisors } from '../Api';
 import { TokenContext } from '../App';
 
-export default function ChatCard({theme, status, billingStatus, supervisor, student}){
+export default function ChatCard({id, theme, status, billingStatus, supervisor, student, navigation}){
 
   const{
     authToken,
@@ -16,7 +16,7 @@ export default function ChatCard({theme, status, billingStatus, supervisor, stud
   } = useContext(TokenContext);
 
   return(
-    <View style={styles.supervisorCard}>
+    <Pressable style={styles.supervisorCard} onPress={() => navigation.navigate('Chat', {chatId: id})}>
       <View style={styles.test}>
         <Image
           style={styles.userImg}
@@ -47,7 +47,7 @@ export default function ChatCard({theme, status, billingStatus, supervisor, stud
           <Text style={styles.statusText}>{billingStatus.title}</Text>
         </View>
       </View>
-    </View>
+    </Pressable>
   )
 }
 

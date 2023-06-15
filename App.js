@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { validateToken, getRole } from './Api';
 import * as SecureStore from 'expo-secure-store';
 import CreateTheme from './components/CreateTheme';
+import Chat from './components/Chat';
 
 export const TokenContext = createContext(null);
 
@@ -52,6 +53,7 @@ export default function App() {
           <>
             <Stack.Screen name="Topics" component={Home}/> 
             <Stack.Screen name="CreateTheme" component={CreateTheme}/> 
+            <Stack.Screen name="Chat" component={Chat}/> 
           </>
         ):(
           <Stack.Screen name="LogIn" component={LogIn}/> 

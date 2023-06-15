@@ -10,6 +10,12 @@ import { TokenContext } from '../App';
 export default function ThemeCard({title, description, tags}){
   const [isOpen, setIsOpen] = useState(false);
 
+  const{
+    authToken,
+    setAuthToken,
+    role
+  } = useContext(TokenContext);
+
   return(
     <Pressable style={styles.themeCard} onPress={() => setIsOpen(!isOpen)}>
       <View style={styles.themeInfo}>
@@ -34,9 +40,11 @@ export default function ThemeCard({title, description, tags}){
       {isOpen &&
         <View style={styles.themeDetails}>
           <Text style={styles.themeDetailsText}>{description}</Text>
-          <Pressable style={styles.contactButton}>
-            <Text style={styles.contactButtonText}>Kontakt</Text>
-          </Pressable>
+          {role !== 'Supervisor' &&
+            <Pressable style={styles.contactButton}>
+              <Text style={styles.contactButtonText}>Kontakt</Text>
+            </Pressable>
+          }
         </View>
       }
     </Pressable>

@@ -37,7 +37,9 @@ export default function Home({navigation}) {
         <></>
       )}
       {activeSection === 'chats'? (
-        <Chats/>
+        <Chats
+          navigation={navigation}
+        />
       ):(
         <></>
       )}
