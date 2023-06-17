@@ -3,7 +3,7 @@ import Toast from 'react-native-root-toast';
 
 const API_URL = 'http://192.168.178.152:3000';
 
-async function getRole(authToken, setRole){
+async function getRole(authToken, setRole, setId){
   if(authToken == null){
     return;
   }else{
@@ -22,8 +22,10 @@ async function getRole(authToken, setRole){
 
       const json = await response.json();
       const role = json.role;
+      const id = json.resource_owner.id;
       
       setRole(role);
+      setId(id);
 
     } catch(error){
       
@@ -351,6 +353,32 @@ async function getChats(authToken, setChats){
   }
 }
 
+async function getChat(authToken, setChat, id){
+  if(authToken == null){
+    return;
+  }else{
+    try{
+      const response = await fetch(`${API_URL}/chats/${id}`, {
+        method: "get",
+        headers: {
+          "Authorization": authToken,
+        }
+      })
+
+      if (!response.ok) {
+        const message = `An error has occured: ${response.status} - ${response.statusText}`;
+        throw new Error(message);
+      }
+
+      const json = await response.json();
+      setChat(json);
+
+    } catch(error){
+      
+    }
+  }
+}
+
 async function getStatuses(authToken, setStatuses, searchQuery){
   if(authToken == null){
     return
@@ -470,6 +498,40 @@ async function postTheme(authToken, title, description, tag_ids){
         "Content-Type": "application/json",
       },
       body: JSON.stringify(themeData),
+    })
+
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status} - ${response.statusText}`;
+      throw new Error(message);
+    }
+
+    const json = await response.json();
+
+  }catch(error){
+        
+      }
+}
+
+async function postMessage(authToken, content, chat_id){
+  if(authToken == null){
+    return;
+  }
+
+  const messagesData = {
+    messages:{
+      chat_id: chat_id,
+      content: content,
+    }
+  }
+
+  try{
+    const response = await fetch(`${API_URL}/messages`, {
+      method: "post",
+      headers: {
+        "Authorization": authToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(messagesData),
     })
 
     if (!response.ok) {
@@ -684,7 +746,9 @@ export { logIn,
          getThemeFromText,
          getMyThemeFromText,
          postTheme,
+         postMessage,
          getChats,
+         getChat,
          getStatuses,
          getBillingStatuses,
          getChatsFromText

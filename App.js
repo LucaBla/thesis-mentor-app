@@ -17,6 +17,7 @@ export default function App() {
   const [authToken, setAuthToken] = useState('');
   const [isValidAuthToken, setIsValidAuthToken] = useState(true);
   const [role, setRole] = useState('');
+  const [userId, setUserId] = useState(null);
 
   const getToken = async () =>{
     try {
@@ -42,11 +43,11 @@ export default function App() {
 
   useEffect(() => {
      validateToken(authToken, setIsValidAuthToken);
-     getRole(authToken, setRole);
+     getRole(authToken, setRole, setUserId);
   }, [authToken]);
 
   return (
-    <TokenContext.Provider value={{authToken, setAuthToken, role, setRole}}>
+    <TokenContext.Provider value={{authToken, setAuthToken, role, setRole, userId}}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isValidAuthToken? (
