@@ -1,10 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, Image, View, Pressable, TextInput, FlatList } from 'react-native';
+import { useContext, useEffect, useState, useRef } from 'react';
+import { StyleSheet, Text, Image, View, Pressable, TextInput, FlatList, KeyboardAvoidingView } from 'react-native';
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { getChat, postMessage } from '../Api';
+import { getChat, postMessage, API_URL } from '../Api';
 import { TokenContext } from '../App';
 import ChatCard from './ChatCard';
 import FilterOptionsChat from './FilterOptionsChat';
@@ -16,10 +16,11 @@ export default function Chat({ route, navigation }) {
   const [chat, setChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const [activeTagsStatus, setActiveTagsStatus] = useState([]);
-  const [activeTagsBillingStatus, setActiveTagsBillingStatus] = useState([]);
+  const [guid, setGuid] = useState('');
 
-  const [showFilterOptions, setShowFilterOptions] = useState(false);
+  const [paddingBottom, setPaddingBottom] = useState(5);
+
+  const flatListRef = useRef(null);
   
   const{
     authToken,
@@ -32,15 +33,77 @@ export default function Chat({ route, navigation }) {
     setNewMessage('');
   }
 
+  function scrollToBottom(){
+    if (flatListRef.current) {
+      flatListRef.current.scrollToOffset({ animated: true, offset: 0 });
+    }
+  };
+
   useEffect(() => {
+    const ws = new WebSocket(`ws://192.168.178.152:3000/cable`);
+    ws.onopen= () =>{
+      console.log("Connected to Websocket server");
+      setGuid(Math.random().toString(36).substring(2, 15));
+  
+      ws.send(
+        JSON.stringify({
+          command: "subscribe",
+          identifier: JSON.stringify({
+            id: guid,
+            channel: "MessagesChannel"
+          })
+        })
+      )
+    }
+  
+    ws.onmessage = (e) =>{
+      const data = JSON.parse(e.data);
+  
+      if(data.type === "ping") return;
+      if(data.type === "welcome") return;
+      if(data.type === "confirm_subscription") return;
+  
+      const message = data.message;
+      setMessages(prevMessages => [message, ...prevMessages]);
+      scrollToBottom();
+    }
+  
+    ws.onerror = (e) => {
+      // an error occurred
+      console.log(e.message);
+    };
     getChat(authToken, setChat, chatId);
+
+    if(Platform.OS === 'ios'){
+      setPaddingBottom(30);
+    }
+
+    const keyboardDidShowListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardDidShow' : 'keyboardWillShow',
+      () => {
+        setPaddingBottom(5);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardDidHide' : 'keyboardWillHide',
+      () => {
+        setPaddingBottom(30);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+      ws.close();
+    };
   }, []);
 
   useEffect(() => {
     if(chat === null){
       return;
     }
-    setMessages(chat.messages);
+    setMessages(chat.messages.reverse());
     console.log("Chat");
   }, [chat]);
 
@@ -49,8 +112,11 @@ export default function Chat({ route, navigation }) {
       {chat == null ? (
         <View></View>
       ):(
-      <View style={styles.chatPage}>
+      <KeyboardAvoidingView style={styles.chatPage} behavior={Platform.OS === 'ios' ? 'height' : 'height'}>
         <View style={styles.topBar}>
+          <Pressable onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back-outline" size={24} color="white" />
+          </Pressable>
           <View style={styles.userInfo}>
             <Image
                 style={styles.userImg}
@@ -65,14 +131,17 @@ export default function Chat({ route, navigation }) {
           <Ionicons name="ellipsis-horizontal" size={20} color="white" />
         </View>
         <FlatList
+          ref={flatListRef}
           data={messages}
+          inverted={true}
+          marginBottom={Platform.OS === 'ios' ? 40 + paddingBottom : 40}
           renderItem={
             ({item}) => 
               <Message messageId={item.user_id} content={item.content}/>
           }
           keyExtractor={item => item.id}
         />
-        <View style={styles.bottomBar}>
+        <View style={[styles.bottomBar, {paddingBottom: paddingBottom}]}>
           <TextInput
             placeholder={'Nachricht...'}
             placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
@@ -90,8 +159,9 @@ export default function Chat({ route, navigation }) {
             <Ionicons name="send" size={20} color="white" />
           </Pressable>
         </View>
-      </View>
+      </KeyboardAvoidingView>
       )}
+      <StatusBar style="light" />
     </>
   );
 }
@@ -100,6 +170,7 @@ const styles = StyleSheet.create({
   chatPage:{
     backgroundColor: 'white',
     height: '100%',
+    flex: 1
   },
   filterButton:{
     alignSelf: 'flex-end',
@@ -117,7 +188,8 @@ const styles = StyleSheet.create({
   bottomBar:{
     flexDirection: 'row',
     backgroundColor: '#0F4D7E',
-    padding: 5,
+    paddingHorizontal: 5,
+    paddingVertical: 5,
     position: 'absolute',
     bottom: 0,
     width: '100%',

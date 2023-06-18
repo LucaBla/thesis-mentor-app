@@ -731,7 +731,9 @@ async function deleteToken() {
   }
 }
 
-export { logIn, 
+export { 
+         API_URL,
+         logIn, 
          validateToken, 
          logOut, 
          getRole, 
