@@ -4,7 +4,7 @@ import { StyleSheet, Text, FlatList, View, Pressable, TextInput } from 'react-na
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { getStatuses, getBillingStatuses, putChat } from '../Api';
+import { getStatuses, getBillingStatuses, putChat, getMyThemes } from '../Api';
 import { TokenContext } from '../App';
 import ChatCard from './ChatCard';
 import FilterOptionsChat from './FilterOptionsChat';
@@ -12,16 +12,21 @@ import { useFocusEffect } from '@react-navigation/native';
 import TagCardChatOptions from './TagCardChatOptions';
 
 
-export default function ChatOptions({setOptionsVisible, activeStatus, chatId, setActiveStatus, activeBillingStatus, setActiveBillingStatus}) {
+export default function ChatOptions({setOptionsVisible, activeStatus, chatId, setActiveStatus, activeBillingStatus, setActiveBillingStatus, activeTheme, setActiveTheme}) {
   const [statuses, setStatuses] = useState([]);
   const [billingStatuses, setBillingStatuses] = useState([]);
+  const [themes, setThemes] = useState([]);
+
   const [activeTagStatus, setActiveTagStatus] = useState(activeStatus);
   const [activeTagBillingStatus, setActiveTagBillingStatus] = useState(activeBillingStatus);
+  const [activeTagTheme, setActiveTagTheme] = useState(activeTheme);
+
   const [searchQuery, setSearchQuery] = useState('');
 
   const [statusesIsOpen, setStatusesIsOpen] = useState(false);
   const [billingStatusesIsOpen, setBillingStatusesIsOpen] = useState(false);
-  
+  const [themeIsOpen, setThemeIsOpen] = useState(false);
+
   const{
     authToken,
     setAuthToken,
@@ -29,20 +34,23 @@ export default function ChatOptions({setOptionsVisible, activeStatus, chatId, se
   } = useContext(TokenContext);
 
   function closeChatOptions(){
-    putChat(authToken, chatId, activeTagStatus, activeTagBillingStatus);
+    putChat(authToken, chatId, activeTagStatus, activeTagBillingStatus, activeTagTheme);
     setActiveStatus(activeTagStatus);
     setActiveBillingStatus(activeTagBillingStatus);
+    setActiveTheme(activeTagTheme);
     setOptionsVisible(false)
   }
 
   useEffect(() => {
     getStatuses(authToken, setStatuses, null);
     getBillingStatuses(authToken, setBillingStatuses, null);
+    getMyThemes(authToken, setThemes);
   }, []);
 
   useEffect(() => {
     getStatuses(authToken, setStatuses, searchQuery);
     getBillingStatuses(authToken, setBillingStatuses, searchQuery);
+    //getMyThemes(authToken, setThemes);
   }, [searchQuery]);
 
   return(
@@ -106,6 +114,33 @@ export default function ChatOptions({setOptionsVisible, activeStatus, chatId, se
                 title={item.title} 
                 activeTag={activeTagBillingStatus} 
                 setActiveTag={setActiveTagBillingStatus}
+              />
+          }
+          ItemSeparatorComponent={() => <View style={{height: 10}} />}
+        />
+      ):(
+        <></>
+      )
+      }
+      <Pressable style={styles.statusHeader} onPress={() => setThemeIsOpen(!themeIsOpen)}>
+        <Text style={styles.statusHeaderText}>Thema</Text>
+        {themeIsOpen ? (
+          <Ionicons name="chevron-up" size={20} color="black" />
+        ):(
+          <Ionicons name="chevron-down" size={20} color="black" />
+        )}
+      </Pressable>
+      {themeIsOpen ? (
+        <FlatList
+          style={styles.tagList}
+          data={themes}
+          renderItem={
+            ({item}) => 
+              <TagCardChatOptions
+                id={item.id} 
+                title={item.title} 
+                activeTag={activeTagTheme} 
+                setActiveTag={setActiveTagTheme}
               />
           }
           ItemSeparatorComponent={() => <View style={{height: 10}} />}
