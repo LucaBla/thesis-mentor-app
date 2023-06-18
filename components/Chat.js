@@ -40,7 +40,7 @@ export default function Chat({ route, navigation }) {
   };
 
   useEffect(() => {
-    const ws = new WebSocket(`ws://192.168.178.152:3000/cable`);
+    const ws = new WebSocket(`ws://192.168.178.152:3000/cable?chat_id=${chatId}`);
     ws.onopen= () =>{
       console.log("Connected to Websocket server");
       setGuid(Math.random().toString(36).substring(2, 15));
@@ -50,7 +50,8 @@ export default function Chat({ route, navigation }) {
           command: "subscribe",
           identifier: JSON.stringify({
             id: guid,
-            channel: "MessagesChannel"
+            channel: "MessagesChannel",
+            chat_id: chatId
           })
         })
       )
