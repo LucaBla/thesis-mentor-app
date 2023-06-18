@@ -16,6 +16,7 @@ export default function Chat({ route, navigation }) {
 
   const [chat, setChat] = useState(null);
   const [chatStatus, setChatStatus] = useState('');
+  const [chatBillingStatus, setChatBillingStatus] = useState('');
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [guid, setGuid] = useState('');
@@ -110,6 +111,7 @@ export default function Chat({ route, navigation }) {
     }
     setMessages(chat.messages.reverse());
     setChatStatus(chat.status.id);
+    setChatBillingStatus(chat.billing_status.id);
   }, [chat]);
 
   return (
@@ -176,6 +178,8 @@ export default function Chat({ route, navigation }) {
           setOptionsVisible={setOptionsVisible}
           activeStatus={chatStatus}
           setActiveStatus={setChatStatus}
+          activeBillingStatus={chatBillingStatus}
+          setActiveBillingStatus={setChatBillingStatus}
           chatId={chatId}
         />
       )}

@@ -546,7 +546,7 @@ async function postMessage(authToken, content, chat_id){
       }
 }
 
-async function putChat(authToken, chatId, statusId){
+async function putChat(authToken, chatId, statusId, billingStatusId){
   if(authToken == null){
     return;
   }
@@ -554,6 +554,7 @@ async function putChat(authToken, chatId, statusId){
   const chatData = {
     chat:{
       status_id: statusId,
+      billing_status_id: billingStatusId
     }
   }
 

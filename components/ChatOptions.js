@@ -4,7 +4,7 @@ import { StyleSheet, Text, FlatList, View, Pressable, TextInput } from 'react-na
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { getStatuses, putChat } from '../Api';
+import { getStatuses, getBillingStatuses, putChat } from '../Api';
 import { TokenContext } from '../App';
 import ChatCard from './ChatCard';
 import FilterOptionsChat from './FilterOptionsChat';
@@ -12,13 +12,15 @@ import { useFocusEffect } from '@react-navigation/native';
 import TagCardChatOptions from './TagCardChatOptions';
 
 
-export default function ChatOptions({setOptionsVisible, activeStatus, chatId, setActiveStatus}) {
+export default function ChatOptions({setOptionsVisible, activeStatus, chatId, setActiveStatus, activeBillingStatus, setActiveBillingStatus}) {
   const [statuses, setStatuses] = useState([]);
+  const [billingStatuses, setBillingStatuses] = useState([]);
   const [activeTagStatus, setActiveTagStatus] = useState(activeStatus);
-  const [activeTagsBillingStatus, setActiveTagsBillingStatus] = useState([]);
+  const [activeTagBillingStatus, setActiveTagBillingStatus] = useState(activeBillingStatus);
   const [searchQuery, setSearchQuery] = useState('');
 
   const [statusesIsOpen, setStatusesIsOpen] = useState(false);
+  const [billingStatusesIsOpen, setBillingStatusesIsOpen] = useState(false);
   
   const{
     authToken,
@@ -27,19 +29,20 @@ export default function ChatOptions({setOptionsVisible, activeStatus, chatId, se
   } = useContext(TokenContext);
 
   function closeChatOptions(){
-    putChat(authToken, chatId, activeTagStatus);
+    putChat(authToken, chatId, activeTagStatus, activeTagBillingStatus);
     setActiveStatus(activeTagStatus);
+    setActiveBillingStatus(activeTagBillingStatus);
     setOptionsVisible(false)
   }
 
   useEffect(() => {
     getStatuses(authToken, setStatuses, null);
-    //getBillingStatuses(authToken, setBillingStatuses, null);
+    getBillingStatuses(authToken, setBillingStatuses, null);
   }, []);
 
   useEffect(() => {
     getStatuses(authToken, setStatuses, searchQuery);
-    //getBillingStatuses(authToken, setBillingStatuses, searchQuery);
+    getBillingStatuses(authToken, setBillingStatuses, searchQuery);
   }, [searchQuery]);
 
   return(
@@ -84,7 +87,7 @@ export default function ChatOptions({setOptionsVisible, activeStatus, chatId, se
       ):(
         <></>
       )}
-      {/* <Pressable style={styles.statusHeader} onPress={() => setBillingStatusesIsOpen(!billingStatusesIsOpen)}>
+      <Pressable style={styles.statusHeader} onPress={() => setBillingStatusesIsOpen(!billingStatusesIsOpen)}>
         <Text style={styles.statusHeaderText}>Rechnungsstatus</Text>
         {billingStatusesIsOpen ? (
           <Ionicons name="chevron-up" size={20} color="black" />
@@ -98,14 +101,19 @@ export default function ChatOptions({setOptionsVisible, activeStatus, chatId, se
           data={billingStatuses}
           renderItem={
             ({item}) => 
-            <TagCardFilter id={item.id} title={item.title} activeTags={activeTagsBillingStatus} setActiveTags={setActiveTagsBillingStatus}/>
+              <TagCardChatOptions
+                id={item.id} 
+                title={item.title} 
+                activeTag={activeTagBillingStatus} 
+                setActiveTag={setActiveTagBillingStatus}
+              />
           }
           ItemSeparatorComponent={() => <View style={{height: 10}} />}
         />
       ):(
         <></>
       )
-      } */}
+      }
     </View>
   );
 }
