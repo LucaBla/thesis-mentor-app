@@ -512,6 +512,43 @@ async function postTheme(authToken, title, description, tag_ids){
       }
 }
 
+async function postChat(authToken, supervisorId, themeId, setNewChatId){
+  if(authToken == null){
+    return;
+  }
+
+  const chatData = {
+    chat:{
+      supervisor_id: supervisorId,
+      status_id: 2,
+      billing_status_id: 2,
+      theme_id: themeId
+    }
+  }
+
+  try{
+    const response = await fetch(`${API_URL}/chats`, {
+      method: "post",
+      headers: {
+        "Authorization": authToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(chatData),
+    })
+
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status} - ${response.statusText}`;
+      throw new Error(message);
+    }
+
+    const json = await response.json();
+    setNewChatId(json.id);
+
+  }catch(error){
+        
+      }
+}
+
 async function postMessage(authToken, content, chat_id){
   if(authToken == null){
     return;
@@ -784,6 +821,7 @@ export {
          getMyThemeFromText,
          postTheme,
          postMessage,
+         postChat,
          putChat,
          getChats,
          getChat,

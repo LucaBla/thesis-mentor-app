@@ -4,17 +4,28 @@ import { StyleSheet, Text, ScrollView, TouchableOpacity, Pressable, FlatList, Vi
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { getSupervisors } from '../Api';
+import { postChat } from '../Api';
 import { TokenContext } from '../App';
 
-export default function ThemeCard({title, description, tags}){
+export default function ThemeCard({navigation, id, title, description, tags, supervisorId}){
   const [isOpen, setIsOpen] = useState(false);
+  const [newChatId, setNewChatId] = useState(null);
 
   const{
     authToken,
     setAuthToken,
     role
   } = useContext(TokenContext);
+
+  function createChat(){
+    postChat(authToken, supervisorId, id, setNewChatId);
+  }
+
+  useEffect(() => {
+    if(newChatId !== null){
+      navigation.navigate('Chat', {chatId: newChatId})
+    }
+  }, [newChatId]);
 
   return(
     <Pressable style={styles.themeCard} onPress={() => setIsOpen(!isOpen)}>
@@ -41,7 +52,7 @@ export default function ThemeCard({title, description, tags}){
         <View style={styles.themeDetails}>
           <Text style={styles.themeDetailsText}>{description}</Text>
           {role !== 'Supervisor' &&
-            <Pressable style={styles.contactButton}>
+            <Pressable style={styles.contactButton} onPress={createChat}>
               <Text style={styles.contactButtonText}>Kontakt</Text>
             </Pressable>
           }

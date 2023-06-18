@@ -10,7 +10,7 @@ import { getThemes } from '../Api';
 import ThemeCard from './ThemeCard';
 import FilterOptions from './FilterOptions';
 
-export default function ThemesStudent() {
+export default function ThemesStudent({navigation}) {
   const [themes, setThemes] = useState([]);
   const [showFilterOptions, setShowFilterOptions] = useState(false);
   const [activeTags, setActiveTags] = useState([]);
@@ -47,9 +47,12 @@ export default function ThemesStudent() {
               renderItem={
                 ({item}) => 
                 <ThemeCard 
+                    navigation={navigation}
+                    id={item.id}
                     title={item.title} 
                     description={item.description} 
                     tags = {item.tags}
+                    supervisorId = {item.supervisor_id}
                 />
               }
               keyExtractor={item => item.id}

@@ -20,7 +20,9 @@ export default function Themes({navigation}) {
   return (
     <View style={styles.ThemesWrapper}>
       {role == 'Student' && 
-        <ThemesStudent/>
+        <ThemesStudent
+          navigation={navigation}
+        />
       }
       {role === 'Supervisor' &&
       <ThemesSupervisor
