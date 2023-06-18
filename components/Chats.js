@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useCallback } from 'react';
 import { StyleSheet, Text, FlatList, View, Pressable } from 'react-native';
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
@@ -8,6 +8,8 @@ import { getChats } from '../Api';
 import { TokenContext } from '../App';
 import ChatCard from './ChatCard';
 import FilterOptionsChat from './FilterOptionsChat';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 export default function Chats({navigation}) {
   const [chats, setChats] = useState([]);
@@ -22,9 +24,15 @@ export default function Chats({navigation}) {
     role
   } = useContext(TokenContext);
 
-  useEffect(() => {
-    getChats(authToken, setChats);
-  }, []);
+  // useEffect(() => {
+  //   getChats(authToken, setChats);
+  // }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      getChats(authToken, setChats);
+    }, [])
+  );
 
   return (
     <>

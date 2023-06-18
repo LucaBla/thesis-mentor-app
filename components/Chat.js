@@ -9,16 +9,20 @@ import { TokenContext } from '../App';
 import ChatCard from './ChatCard';
 import FilterOptionsChat from './FilterOptionsChat';
 import Message from './Message';
+import ChatOptions from './ChatOptions';
 
 export default function Chat({ route, navigation }) {
   const { chatId } = route.params;
 
   const [chat, setChat] = useState(null);
+  const [chatStatus, setChatStatus] = useState('');
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [guid, setGuid] = useState('');
 
   const [paddingBottom, setPaddingBottom] = useState(5);
+
+  const [optionsVisible, setOptionsVisible] = useState(false);
 
   const flatListRef = useRef(null);
   
@@ -105,62 +109,75 @@ export default function Chat({ route, navigation }) {
       return;
     }
     setMessages(chat.messages.reverse());
-    console.log("Chat");
+    setChatStatus(chat.status.id);
   }, [chat]);
 
   return (
     <>
-      {chat == null ? (
-        <View></View>
-      ):(
-      <KeyboardAvoidingView style={styles.chatPage} behavior={Platform.OS === 'ios' ? 'height' : 'height'}>
-        <View style={styles.topBar}>
-          <Pressable onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back-outline" size={24} color="white" />
-          </Pressable>
-          <View style={styles.userInfo}>
-            <Image
-                style={styles.userImg}
-                source={require('../assets/user_img.png')}
+      {!optionsVisible ? (
+        <>
+          {chat == null ? (
+            <></>
+          ):(
+          <KeyboardAvoidingView style={styles.chatPage} behavior={Platform.OS === 'ios' ? 'height' : 'height'}>
+            <View style={styles.topBar}>
+              <Pressable onPress={() => navigation.goBack()}>
+                <Ionicons name="arrow-back-outline" size={24} color="white" />
+              </Pressable>
+              <View style={styles.userInfo}>
+                <Image
+                    style={styles.userImg}
+                    source={require('../assets/user_img.png')}
+                />
+                {role === 'Supervisor' ?(
+                  <Text style={styles.nameText}>{chat.student.first_name} {chat.student.last_name}</Text>
+                ):(
+                  <Text style={styles.nameText}>{chat.supervisor.first_name} {chat.supervisor.last_name}</Text>
+                )}
+              </View>
+              <Pressable onPress={() => setOptionsVisible(true)}>
+                <Ionicons name="ellipsis-horizontal" size={20} color="white" />
+              </Pressable>
+            </View>
+            <FlatList
+              ref={flatListRef}
+              data={messages}
+              inverted={true}
+              marginBottom={Platform.OS === 'ios' ? 40 + paddingBottom : 40}
+              renderItem={
+                ({item}) => 
+                  <Message messageId={item.user_id} content={item.content}/>
+              }
+              keyExtractor={item => item.id}
             />
-            {role === 'Supervisor' ?(
-              <Text style={styles.nameText}>{chat.student.first_name} {chat.student.last_name}</Text>
-            ):(
-              <Text style={styles.nameText}>{chat.supervisor.first_name} {chat.supervisor.last_name}</Text>
-            )}
-          </View>
-          <Ionicons name="ellipsis-horizontal" size={20} color="white" />
-        </View>
-        <FlatList
-          ref={flatListRef}
-          data={messages}
-          inverted={true}
-          marginBottom={Platform.OS === 'ios' ? 40 + paddingBottom : 40}
-          renderItem={
-            ({item}) => 
-              <Message messageId={item.user_id} content={item.content}/>
-          }
-          keyExtractor={item => item.id}
+            <View style={[styles.bottomBar, {paddingBottom: paddingBottom}]}>
+              <TextInput
+                placeholder={'Nachricht...'}
+                placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
+                value={newMessage}
+                onChangeText={setNewMessage}
+                width={'90%'}
+                backgroundColor={'#4DA1C7'}
+                color={'white'}
+                height={'100%'}
+                borderRadius={5}
+                paddingHorizontal={5}
+                multiline={true}
+              />
+              <Pressable style={styles.sendButton} onPress={sendMessage}>
+                <Ionicons name="send" size={20} color="white" />
+              </Pressable>
+            </View>
+          </KeyboardAvoidingView>
+          )}
+        </>
+      ): (
+        <ChatOptions
+          setOptionsVisible={setOptionsVisible}
+          activeStatus={chatStatus}
+          setActiveStatus={setChatStatus}
+          chatId={chatId}
         />
-        <View style={[styles.bottomBar, {paddingBottom: paddingBottom}]}>
-          <TextInput
-            placeholder={'Nachricht...'}
-            placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
-            value={newMessage}
-            onChangeText={setNewMessage}
-            width={'90%'}
-            backgroundColor={'#4DA1C7'}
-            color={'white'}
-            height={'100%'}
-            borderRadius={5}
-            paddingHorizontal={5}
-            multiline={true}
-          />
-          <Pressable style={styles.sendButton} onPress={sendMessage}>
-            <Ionicons name="send" size={20} color="white" />
-          </Pressable>
-        </View>
-      </KeyboardAvoidingView>
       )}
       <StatusBar style="light" />
     </>

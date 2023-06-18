@@ -546,6 +546,39 @@ async function postMessage(authToken, content, chat_id){
       }
 }
 
+async function putChat(authToken, chatId, statusId){
+  if(authToken == null){
+    return;
+  }
+
+  const chatData = {
+    chat:{
+      status_id: statusId,
+    }
+  }
+
+  try{
+    const response = await fetch(`${API_URL}/chats/${chatId}`, {
+      method: "put",
+      headers: {
+        "Authorization": authToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(chatData),
+    })
+
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status} - ${response.statusText}`;
+      throw new Error(message);
+    }
+
+    const json = await response.json();
+
+  }catch(error){
+        
+      }
+}
+
 async function addTagsFromSupervisor(authToken, setSupervisor, ids){
   if(authToken == null){
     return;
@@ -749,6 +782,7 @@ export {
          getMyThemeFromText,
          postTheme,
          postMessage,
+         putChat,
          getChats,
          getChat,
          getStatuses,
