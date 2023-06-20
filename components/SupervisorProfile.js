@@ -10,7 +10,7 @@ import SupervisorCard from './SupervisorCard';
 import EditTags from './EditTags';
 import SupervisorsStudent from './SupervisorsStudent';
 
-export default function SupervisorProfile() {
+export default function SupervisorProfile({navigation}) {
   const [supervisor, setSupervisor] = useState(null);
   const [tags, setTags] = useState([]);
   const [filteredTags, setFilteredTags] = useState([]);
@@ -80,6 +80,12 @@ export default function SupervisorProfile() {
               ))}
           </ScrollView>
         </View>
+        <Pressable 
+          style={styles.secondSupervisedButton} 
+          onPress={() => navigation.navigate("SecondSupervised")}
+        >
+          <Text style={styles.secondSupervisedButtonText}>Zweitprüfer Arbeiten</Text>
+        </Pressable>
       </View>
     ):(
       <Text>Loading...</Text>
@@ -189,5 +195,18 @@ const styles = StyleSheet.create({
   },
   tagToDelete:{
     backgroundColor: 'red'
+  },
+  secondSupervisedButton:{
+    marginTop: 10,
+    marginHorizontal: 10,
+    backgroundColor: '#67B345',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+  },
+  secondSupervisedButtonText:{
+    color: 'white',
+    fontSize: 14,
+    textAlign: 'center'
   }
 });

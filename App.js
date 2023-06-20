@@ -8,6 +8,7 @@ import { validateToken, getRole } from './Api';
 import * as SecureStore from 'expo-secure-store';
 import CreateTheme from './components/CreateTheme';
 import Chat from './components/Chat';
+import SecondSupervised from './components/SecondSupervised';
 
 export const TokenContext = createContext(null);
 
@@ -55,6 +56,7 @@ export default function App() {
             <Stack.Screen name="Topics" component={Home}/> 
             <Stack.Screen name="CreateTheme" component={CreateTheme}/> 
             <Stack.Screen name="Chat" component={Chat}/> 
+            <Stack.Screen name="SecondSupervised" component={SecondSupervised}/> 
           </>
         ):(
           <Stack.Screen name="LogIn" component={LogIn}/> 

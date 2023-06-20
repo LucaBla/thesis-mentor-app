@@ -353,6 +353,32 @@ async function getChats(authToken, setChats){
   }
 }
 
+async function getSecondChats(authToken, setSecondChats){
+  if(authToken == null){
+    return;
+  }else{
+    try{
+      const response = await fetch(`${API_URL}/second_chats`, {
+        method: "get",
+        headers: {
+          "Authorization": authToken,
+        }
+      })
+
+      if (!response.ok) {
+        const message = `An error has occured: ${response.status} - ${response.statusText}`;
+        throw new Error(message);
+      }
+
+      const json = await response.json();
+      setSecondChats(json);
+
+    } catch(error){
+      
+    }
+  }
+}
+
 async function getChat(authToken, setChat, id){
   if(authToken == null){
     return;
@@ -851,6 +877,7 @@ export {
          postChat,
          putChat,
          getChats,
+         getSecondChats,
          getChat,
          getStatuses,
          getBillingStatuses,

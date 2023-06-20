@@ -34,7 +34,9 @@ export default function Supervisors( {navigation}) {
         />
       }
       {role === 'Supervisor' &&
-        <SupervisorProfile/>
+        <SupervisorProfile
+          navigation={navigation}
+        />
       }
     </View>
   );

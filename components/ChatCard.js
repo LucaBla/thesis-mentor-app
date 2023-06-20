@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { getSupervisors } from '../Api';
 import { TokenContext } from '../App';
 
-export default function ChatCard({id, theme, status, billingStatus, supervisor, student, navigation}){
+export default function ChatCard({id, theme, status, billingStatus, supervisor, student, navigation, secondSupervisedPage = false}){
 
   const{
     authToken,
@@ -15,8 +15,17 @@ export default function ChatCard({id, theme, status, billingStatus, supervisor, 
     role
   } = useContext(TokenContext);
 
+  function handlePress(){
+    if(!secondSupervisedPage){
+      navigation.navigate('Chat', {chatId: id})
+    }
+    else{
+      return
+    }
+  }
+
   return(
-    <Pressable style={styles.supervisorCard} onPress={() => navigation.navigate('Chat', {chatId: id})}>
+    <Pressable style={styles.supervisorCard} onPress={handlePress}>
       <View style={styles.test}>
         <Image
           style={styles.userImg}
