@@ -686,6 +686,32 @@ async function removeTagsFromSupervisor(authToken, setSupervisor, ids){
       }
 }
 
+async function deleteChat(authToken, chatId){
+  if(authToken == null){
+    return;
+  }
+
+  try{
+    const response = await fetch(`${API_URL}/chats/${chatId}`, {
+      method: "delete",
+      headers: {
+        "Authorization": authToken,
+        "Content-Type": "application/json",
+      }
+    })
+
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status} - ${response.statusText}`;
+      throw new Error(message);
+    }
+
+    const json = await response.json();
+
+  }catch(error){
+        
+      }
+}
+
 async function validateToken(authToken, setIsValidAuthToken){
   if(authToken == null){
     setIsValidAuthToken(false);
@@ -827,5 +853,6 @@ export {
          getChat,
          getStatuses,
          getBillingStatuses,
-         getChatsFromText
+         getChatsFromText,
+         deleteChat
        };

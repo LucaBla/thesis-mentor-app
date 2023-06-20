@@ -184,6 +184,7 @@ export default function Chat({ route, navigation }) {
         </>
       ): (
         <ChatOptions
+          navigation={navigation}
           setOptionsVisible={setOptionsVisible}
           activeStatus={chatStatus}
           setActiveStatus={setChatStatus}

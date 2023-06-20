@@ -1,10 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import { useContext, useEffect, useState, useCallback } from 'react';
-import { StyleSheet, Text, FlatList, View, Pressable, TextInput } from 'react-native';
+import { StyleSheet, Text, FlatList, View, Pressable, TextInput, Alert } from 'react-native';
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { getStatuses, getBillingStatuses, putChat, getMyThemes } from '../Api';
+import { getStatuses, getBillingStatuses, putChat, getMyThemes, deleteChat } from '../Api';
 import { TokenContext } from '../App';
 import ChatCard from './ChatCard';
 import FilterOptionsChat from './FilterOptionsChat';
@@ -12,7 +12,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import TagCardChatOptions from './TagCardChatOptions';
 
 
-export default function ChatOptions({setOptionsVisible, activeStatus, chatId, setActiveStatus, activeBillingStatus, setActiveBillingStatus, activeTheme, setActiveTheme}) {
+export default function ChatOptions({navigation, setOptionsVisible, activeStatus, chatId, setActiveStatus, 
+                                     activeBillingStatus, setActiveBillingStatus, activeTheme, setActiveTheme}) {
   const [statuses, setStatuses] = useState([]);
   const [billingStatuses, setBillingStatuses] = useState([]);
   const [themes, setThemes] = useState([]);
@@ -41,6 +42,11 @@ export default function ChatOptions({setOptionsVisible, activeStatus, chatId, se
     setOptionsVisible(false)
   }
 
+  function deleteChatAndNavigateBack(){
+    deleteChat(authToken, chatId);
+    navigation.navigate("Topics");
+  }
+
   useEffect(() => {
     getStatuses(authToken, setStatuses, null);
     getBillingStatuses(authToken, setBillingStatuses, null);
@@ -52,6 +58,15 @@ export default function ChatOptions({setOptionsVisible, activeStatus, chatId, se
     getBillingStatuses(authToken, setBillingStatuses, searchQuery);
     //getMyThemes(authToken, setThemes);
   }, [searchQuery]);
+
+  const deleteAlert = () =>
+    Alert.alert('Chat löschen', 'Möchten sie den Chat wirklich löschen?', [
+      {
+        text: 'Abbrechen',
+        style: 'cancel',
+      },
+      {text: 'Bestätigen', onPress: () => deleteChatAndNavigateBack()},
+    ]);
 
   return(
     <View>
@@ -149,6 +164,9 @@ export default function ChatOptions({setOptionsVisible, activeStatus, chatId, se
         <></>
       )
       }
+      <Pressable style={styles.deleteButton} onPress={deleteAlert}>
+        <Ionicons name="trash-bin" size={24} color="white" />
+      </Pressable>
     </View>
   );
 }
@@ -200,5 +218,12 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     width: '90%',
     alignSelf: 'center'
+  },
+  deleteButton:{
+    backgroundColor: 'red',
+    marginHorizontal: 20,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 10
   }
 });
