@@ -63,7 +63,7 @@ export default function ChatOptions({navigation, setOptionsVisible, activeStatus
     getStatuses(authToken, setStatuses, searchQuery);
     getBillingStatuses(authToken, setBillingStatuses, searchQuery);
     getMyThemes(authToken, setThemes, searchQuery);
-    //getSupervisors(authToken, setSupervisors)
+    getSupervisors(authToken, setSupervisors, searchQuery)
   }, [searchQuery]);
 
   const deleteAlert = () =>

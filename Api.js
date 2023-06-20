@@ -33,12 +33,12 @@ async function getRole(authToken, setRole, setId){
   }
 }
 
-async function getSupervisors(authToken, setSupervisors){
+async function getSupervisors(authToken, setSupervisors, searchQuery= ''){
   if(authToken == null){
     return;
   }else{
     try{
-      const response = await fetch(`${API_URL}/supervisor`, {
+      const response = await fetch(`${API_URL}/supervisor?name=` + searchQuery, {
         method: "get",
         headers: {
           "Authorization": authToken,
