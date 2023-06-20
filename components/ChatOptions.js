@@ -4,7 +4,7 @@ import { StyleSheet, Text, FlatList, View, Pressable, TextInput, Alert } from 'r
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { getStatuses, getBillingStatuses, putChat, getMyThemes, deleteChat } from '../Api';
+import { getStatuses, getBillingStatuses, putChat, getMyThemes, deleteChat, getSupervisors } from '../Api';
 import { TokenContext } from '../App';
 import ChatCard from './ChatCard';
 import FilterOptionsChat from './FilterOptionsChat';
@@ -13,20 +13,24 @@ import TagCardChatOptions from './TagCardChatOptions';
 
 
 export default function ChatOptions({navigation, setOptionsVisible, activeStatus, chatId, setActiveStatus, 
-                                     activeBillingStatus, setActiveBillingStatus, activeTheme, setActiveTheme}) {
+                                     activeBillingStatus, setActiveBillingStatus, activeTheme, setActiveTheme
+                                    ,activeSecondSupervisor, setActiveSecondSupervisor}) {
   const [statuses, setStatuses] = useState([]);
   const [billingStatuses, setBillingStatuses] = useState([]);
   const [themes, setThemes] = useState([]);
+  const [supervisors, setSupervisors] = useState([]);
 
   const [activeTagStatus, setActiveTagStatus] = useState(activeStatus);
   const [activeTagBillingStatus, setActiveTagBillingStatus] = useState(activeBillingStatus);
   const [activeTagTheme, setActiveTagTheme] = useState(activeTheme);
+  const [activeTagSupervisor, setActiveTagSupervisor] = useState(activeSecondSupervisor);
 
   const [searchQuery, setSearchQuery] = useState('');
 
   const [statusesIsOpen, setStatusesIsOpen] = useState(false);
   const [billingStatusesIsOpen, setBillingStatusesIsOpen] = useState(false);
   const [themeIsOpen, setThemeIsOpen] = useState(false);
+  const [secondSupervisorIsOpen, setSecondSupervisorIsOpen] = useState(false);
 
   const{
     authToken,
@@ -35,10 +39,11 @@ export default function ChatOptions({navigation, setOptionsVisible, activeStatus
   } = useContext(TokenContext);
 
   function closeChatOptions(){
-    putChat(authToken, chatId, activeTagStatus, activeTagBillingStatus, activeTagTheme);
+    putChat(authToken, chatId, activeTagStatus, activeTagBillingStatus, activeTagTheme, activeTagSupervisor);
     setActiveStatus(activeTagStatus);
     setActiveBillingStatus(activeTagBillingStatus);
     setActiveTheme(activeTagTheme);
+    setActiveSecondSupervisor(activeTagSupervisor);
     setOptionsVisible(false)
   }
 
@@ -51,12 +56,14 @@ export default function ChatOptions({navigation, setOptionsVisible, activeStatus
     getStatuses(authToken, setStatuses, null);
     getBillingStatuses(authToken, setBillingStatuses, null);
     getMyThemes(authToken, setThemes);
+    getSupervisors(authToken, setSupervisors)
   }, []);
 
   useEffect(() => {
     getStatuses(authToken, setStatuses, searchQuery);
     getBillingStatuses(authToken, setBillingStatuses, searchQuery);
     //getMyThemes(authToken, setThemes);
+    //getSupervisors(authToken, setSupervisors)
   }, [searchQuery]);
 
   const deleteAlert = () =>
@@ -119,20 +126,23 @@ export default function ChatOptions({navigation, setOptionsVisible, activeStatus
         )}
       </Pressable>
       {billingStatusesIsOpen ? (
-        <FlatList
-          style={styles.tagList}
-          data={billingStatuses}
-          renderItem={
-            ({item}) => 
-              <TagCardChatOptions
-                id={item.id} 
-                title={item.title} 
-                activeTag={activeTagBillingStatus} 
-                setActiveTag={setActiveTagBillingStatus}
-              />
-          }
-          ItemSeparatorComponent={() => <View style={{height: 10}} />}
-        />
+        <>
+          <FlatList
+            style={styles.tagList}
+            data={billingStatuses}
+            renderItem={
+              ({item}) => 
+                <TagCardChatOptions
+                  id={item.id} 
+                  title={item.title} 
+                  activeTag={activeTagBillingStatus} 
+                  setActiveTag={setActiveTagBillingStatus}
+                />
+            }
+            ItemSeparatorComponent={() => <View style={{height: 10}} />}
+          />
+          <View style={styles.bR}></View>
+        </>
       ):(
         <></>
       )
@@ -146,20 +156,53 @@ export default function ChatOptions({navigation, setOptionsVisible, activeStatus
         )}
       </Pressable>
       {themeIsOpen ? (
-        <FlatList
-          style={styles.tagList}
-          data={themes}
-          renderItem={
-            ({item}) => 
-              <TagCardChatOptions
-                id={item.id} 
-                title={item.title} 
-                activeTag={activeTagTheme} 
-                setActiveTag={setActiveTagTheme}
-              />
-          }
-          ItemSeparatorComponent={() => <View style={{height: 10}} />}
-        />
+        <>
+          <FlatList
+            style={styles.tagList}
+            data={themes}
+            renderItem={
+              ({item}) => 
+                <TagCardChatOptions
+                  id={item.id} 
+                  title={item.title} 
+                  activeTag={activeTagTheme} 
+                  setActiveTag={setActiveTagTheme}
+                />
+            }
+            ItemSeparatorComponent={() => <View style={{height: 10}} />}
+          />
+          <View style={styles.bR}></View>
+        </>
+      ):(
+        <></>
+      )
+      }
+      <Pressable style={styles.statusHeader} onPress={() => setSecondSupervisorIsOpen(!secondSupervisorIsOpen)}>
+        <Text style={styles.statusHeaderText}>Zweitprüfer</Text>
+        {secondSupervisorIsOpen ? (
+          <Ionicons name="chevron-up" size={20} color="black" />
+        ):(
+          <Ionicons name="chevron-down" size={20} color="black" />
+        )}
+      </Pressable>
+      {secondSupervisorIsOpen ? (
+        <>
+          <FlatList
+            style={styles.tagList}
+            data={supervisors}
+            renderItem={
+              ({item}) => 
+                <TagCardChatOptions
+                  id={item.id} 
+                  title={item.first_name + ' '+ item.last_name} 
+                  activeTag={activeTagSupervisor} 
+                  setActiveTag={setActiveTagSupervisor}
+                />
+            }
+            ItemSeparatorComponent={() => <View style={{height: 10}} />}
+          />
+          <View style={styles.bR}></View>
+        </>
       ):(
         <></>
       )
@@ -224,6 +267,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     borderRadius: 5,
     alignItems: 'center',
-    marginTop: 10
+    marginTop: 10,
+    padding: 2
   }
 });

@@ -583,7 +583,7 @@ async function postMessage(authToken, content, chat_id){
       }
 }
 
-async function putChat(authToken, chatId, statusId, billingStatusId, themeId){
+async function putChat(authToken, chatId, statusId, billingStatusId, themeId, secondSupervisorId){
   if(authToken == null){
     return;
   }
@@ -592,7 +592,8 @@ async function putChat(authToken, chatId, statusId, billingStatusId, themeId){
     chat:{
       status_id: statusId,
       billing_status_id: billingStatusId,
-      theme_id: themeId
+      theme_id: themeId,
+      second_supervisor_id: secondSupervisorId
     }
   }
 

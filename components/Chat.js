@@ -19,6 +19,7 @@ export default function Chat({ route, navigation }) {
   const [chatStatus, setChatStatus] = useState('');
   const [chatBillingStatus, setChatBillingStatus] = useState('');
   const [chatTheme, setChatTheme] = useState('');
+  const [chatSecondSupervisor, setChatSecondSupervisor] = useState('');
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
@@ -116,6 +117,9 @@ export default function Chat({ route, navigation }) {
     setChatStatus(chat.status.id);
     setChatBillingStatus(chat.billing_status.id);
     setChatTheme(chat.theme.id);
+    if(chat.second_supervisor_id != null){
+      setChatSecondSupervisor(chat.second_supervisor_id);
+    }
   }, [chat]);
 
   return (
@@ -192,6 +196,8 @@ export default function Chat({ route, navigation }) {
           setActiveBillingStatus={setChatBillingStatus}
           activeTheme={chatTheme}
           setActiveTheme={setChatTheme}
+          activeSecondSupervisor={chatSecondSupervisor}
+          setActiveSecondSupervisor={setChatSecondSupervisor}
           chatId={chatId}
         />
       )}
