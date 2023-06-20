@@ -85,12 +85,12 @@ async function getThemes(authToken, setThemes){
   }
 }
 
-async function getMyThemes(authToken, setThemes){
+async function getMyThemes(authToken, setThemes, searchQuery = ''){
   if(authToken == null){
     return;
   }else{
     try{
-      const response = await fetch(`${API_URL}/supervisor/themes`, {
+      const response = await fetch(`${API_URL}/supervisor/themes?title=` +searchQuery, {
         method: "get",
         headers: {
           "Authorization": authToken,

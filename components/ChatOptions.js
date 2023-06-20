@@ -62,7 +62,7 @@ export default function ChatOptions({navigation, setOptionsVisible, activeStatus
   useEffect(() => {
     getStatuses(authToken, setStatuses, searchQuery);
     getBillingStatuses(authToken, setBillingStatuses, searchQuery);
-    //getMyThemes(authToken, setThemes);
+    getMyThemes(authToken, setThemes, searchQuery);
     //getSupervisors(authToken, setSupervisors)
   }, [searchQuery]);
 
