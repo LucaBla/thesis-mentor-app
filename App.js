@@ -22,10 +22,8 @@ export default function App() {
 
   const getToken = async () =>{
     try {
-      //const token = await SecureStore.getItemAsync('authToken');
       const token = await SecureStore.getItemAsync('authToken');
       if (token) {
-        // Verwenden Sie den JWT-Token für API-Anforderungen
         console.log('token found');
         setAuthToken(token);
       }
@@ -67,12 +65,3 @@ export default function App() {
    
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

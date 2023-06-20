@@ -1,7 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
-import { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, ScrollView, TouchableOpacity, Pressable, FlatList, View, Image, TextInput } from 'react-native';
-import Constants from 'expo-constants';
+import { useEffect, useState } from 'react';
+import { StyleSheet, Text, Pressable, FlatList, View, TextInput } from 'react-native';
 import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
 import { getTags, getSupervisorFromText, getThemeFromText, getMyThemeFromText } from '../Api';
@@ -73,10 +71,6 @@ export default function FilterOptions({page, authToken, setShowFilterOptions, se
 const styles = StyleSheet.create({
   tagList:{
     marginHorizontal:20,
-  },
-  tagCardText:{
-    color: 'white',
-    fontSize: 16
   },
   closeButton:{
     alignSelf: 'flex-end',

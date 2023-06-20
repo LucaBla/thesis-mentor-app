@@ -1,17 +1,12 @@
-import { StatusBar } from 'expo-status-bar';
-import { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, ScrollView, TouchableOpacity, Pressable, FlatList, View, Image } from 'react-native';
+import { useContext } from 'react';
+import { StyleSheet, Text, Pressable, View, Image } from 'react-native';
 import Constants from 'expo-constants';
-import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { getSupervisors } from '../Api';
 import { TokenContext } from '../App';
 
 export default function ChatCard({id, theme, status, billingStatus, supervisor, student, navigation, secondSupervisedPage = false}){
 
   const{
-    authToken,
-    setAuthToken,
     role
   } = useContext(TokenContext);
 
@@ -69,13 +64,6 @@ export default function ChatCard({id, theme, status, billingStatus, supervisor, 
 }
 
 const styles = StyleSheet.create({
-  ThemesWrapper: {
-    flex: 1,
-    width: '100%',
-    backgroundColor: 'grey',
-    paddingTop: Constants.statusBarHeight + 20 || 0,
-    gap: 20
-  },
   supervisorCard: {
     backgroundColor: '#0F4D7E',
     padding: 20,
@@ -114,17 +102,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 2,
     borderColor: '#4DA1C7'
-  },
-  tagCard:{
-    backgroundColor: '#4DA1C7',
-    alignSelf: 'flex-start',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 50,
-  },
-  tagCardText:{
-    fontSize: 12,
-    color: 'white'
   },
   statusFlex:{
     flexDirection: 'row',

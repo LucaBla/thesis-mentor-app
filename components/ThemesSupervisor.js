@@ -1,23 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
-import { useContext, useState, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList, Pressable } from 'react-native';
-import Constants from 'expo-constants';
-import { Keyboard } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; 
-import { logOut } from '../Api';
-import { TokenContext } from '../App';
-import { getThemes } from '../Api';
+import { useState } from 'react';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
 import ThemesStudent from './ThemesStudent';
 import MyThemes from './MyThemes';
 
 export default function ThemesSupervisor({navigation}) {
   const [showAll, setShowAll] = useState(false);
-
-  const{
-    authToken,
-    setAuthToken,
-    role
-  } = useContext(TokenContext);
 
   return (
     <>
@@ -41,9 +28,6 @@ export default function ThemesSupervisor({navigation}) {
 }
 
 const styles = StyleSheet.create({
-  themesWrapper:{
-   
-  },
   themeSelector:{
     flexDirection: 'row',
     justifyContent: 'space-around',

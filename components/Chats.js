@@ -1,8 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
-import { useContext, useEffect, useState, useCallback } from 'react';
-import { StyleSheet, Text, FlatList, View, Pressable } from 'react-native';
-import Constants from 'expo-constants';
-import { Keyboard } from 'react-native';
+import { useContext, useState, useCallback } from 'react';
+import { StyleSheet, FlatList, View, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
 import { getChats } from '../Api';
 import { TokenContext } from '../App';
@@ -20,13 +17,7 @@ export default function Chats({navigation}) {
   
   const{
     authToken,
-    setAuthToken,
-    role
   } = useContext(TokenContext);
-
-  // useEffect(() => {
-  //   getChats(authToken, setChats);
-  // }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -51,7 +42,7 @@ export default function Chats({navigation}) {
         <Pressable style={styles.filterButton} onPress={() => setShowFilterOptions(true)}>
           <Ionicons name="filter" size={20} color="black" />
         </Pressable>
-        <View style={styles.supervisorList}>
+        <View style={styles.chatList}>
           <FlatList
             data={chats}
             renderItem={
@@ -77,14 +68,7 @@ export default function Chats({navigation}) {
 }
 
 const styles = StyleSheet.create({
-  ThemesWrapper: {
-    flex: 1,
-    width: '100%',
-    backgroundColor: 'green',
-    paddingTop: Constants.statusBarHeight + 20 || 0,
-    gap: 20
-  },
-  supervisorList:{
+  chatList:{
     paddingBottom: 120
   },
   filterButton:{

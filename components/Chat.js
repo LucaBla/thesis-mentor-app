@@ -6,8 +6,6 @@ import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
 import { getChat, postMessage, API_URL } from '../Api';
 import { TokenContext } from '../App';
-import ChatCard from './ChatCard';
-import FilterOptionsChat from './FilterOptionsChat';
 import Message from './Message';
 import ChatOptions from './ChatOptions';
 
@@ -33,7 +31,6 @@ export default function Chat({ route, navigation }) {
   
   const{
     authToken,
-    setAuthToken,
     role
   } = useContext(TokenContext);
 
@@ -79,7 +76,6 @@ export default function Chat({ route, navigation }) {
     }
   
     ws.onerror = (e) => {
-      // an error occurred
       console.log(e.message);
     };
     getChat(authToken, setChat, chatId);

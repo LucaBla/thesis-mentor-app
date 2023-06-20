@@ -1,20 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
-import { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, Image, View, Pressable, TextInput, FlatList } from 'react-native';
-import Constants from 'expo-constants';
-import { Keyboard } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; 
-import { getChat } from '../Api';
+import { useContext } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { TokenContext } from '../App';
-import ChatCard from './ChatCard';
-import FilterOptionsChat from './FilterOptionsChat';
 
 export default function Message({ content, messageId }) {
 
   const{
-    authToken,
-    setAuthToken,
-    role,
     userId
   } = useContext(TokenContext);
 

@@ -1,38 +1,21 @@
-import { StatusBar } from 'expo-status-bar';
 import { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, ScrollView, TouchableOpacity, Pressable, FlatList, View, Image } from 'react-native';
+import { StyleSheet, Text, ScrollView, Pressable, View, Image } from 'react-native';
 import Constants from 'expo-constants';
-import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { getSupervisor, getTags, removeTagsFromSupervisor, addTagsFromSupervisor } from '../Api';
+import { getSupervisor, getTags } from '../Api';
 import { TokenContext } from '../App';
-import SupervisorCard from './SupervisorCard';
 import EditTags from './EditTags';
-import SupervisorsStudent from './SupervisorsStudent';
 
 export default function SupervisorProfile({navigation}) {
   const [supervisor, setSupervisor] = useState(null);
   const [tags, setTags] = useState([]);
-  const [filteredTags, setFilteredTags] = useState([]);
   const [showEditTags, setShowEditTags] = useState(false);
-
-  const [selectedNewTags, setSelectedNewTags] = useState([]);
-  const [tagsToRemove, setTagsToRemove] = useState([]);
 
   const{
     authToken,
-    setAuthToken,
-    role
   } = useContext(TokenContext);
 
-  function filterTags(){
-    const filtered = tags.filter(tag1 => !supervisor.tags.some(tag2 => tag2.id === tag1.id));
-    setFilteredTags(filtered);
-  };
-
   function closeEditTags(){
-    setSelectedNewTags([]);
-    setTagsToRemove([]);
     setShowEditTags(false);
   }
 
@@ -150,51 +133,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 50,
   },
-  activeTagsList:{
-    marginHorizontal: 10,
-    marginVertical: 10,
-  },
-  activeTagsListHeader:{
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  activeTagListTitle:{
-    color: 'white',
-    fontSize: 16
-  },
-  tagCardOptions:{
-    marginVertical: 5,
-    backgroundColor: '#4DA1C7',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 50,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
   tagCardText:{
     fontSize: 14,
     color: 'white'
-  },
-  tagEditWrapper:{
-    flex: 1,
-    backgroundColor:'#0F4D7E',
-    marginBottom: 100,
-    borderRadius: 10,
-    marginHorizontal: 10
-  },
-  br:{
-    borderBottomWidth: 3,
-    borderColor: 'white',
-    marginHorizontal: 40
-  },
-  allTagsList:{
-    marginHorizontal: 10,
-    marginVertical: 10,
-  },
-  tagToDelete:{
-    backgroundColor: 'red'
   },
   secondSupervisedButton:{
     marginTop: 10,

@@ -1,13 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
 import { useContext, useState, useEffect } from 'react';
 import { StyleSheet, Text, View, ScrollView, Pressable, TextInput } from 'react-native';
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { logOut } from '../Api';
 import { TokenContext } from '../App';
-import { getMyThemes } from '../Api';
-import ThemeCard from './ThemeCard';
 import FilterOptions from './FilterOptions';
 import { postTheme } from '../Api';
 
@@ -21,8 +17,6 @@ export default function CreateTheme({navigation}) {
 
   const{
     authToken,
-    setAuthToken,
-    role
   } = useContext(TokenContext);
 
   function createTheme(){
@@ -30,12 +24,8 @@ export default function CreateTheme({navigation}) {
     navigation.goBack()
   }
 
-  useEffect(() => {
-    
-  }, []);
-
   return (
-    <View style={styles.themesWrapper}>
+    <View style={styles.wrapper}>
       {showFilterOptions == true ? (
         <FilterOptions 
           page={'CreateTheme'}
@@ -97,7 +87,7 @@ export default function CreateTheme({navigation}) {
 }
 
 const styles = StyleSheet.create({
-  themesWrapper:{
+  wrapper:{
     paddingTop: Constants.statusBarHeight + 20 || 0,
     backgroundColor: 'white',
     paddingHorizontal: 10
@@ -105,13 +95,6 @@ const styles = StyleSheet.create({
   navBar:{
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  themesList: {
-    paddingVertical: -20
-  },
-  filterButton:{
-    alignSelf: 'flex-end',
-    marginRight: 20
   },
   textInput:{
     backgroundColor: '#0F4D7E',

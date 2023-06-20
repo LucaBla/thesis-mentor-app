@@ -1,11 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
-import { useContext, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Pressable } from 'react-native';
-import Constants from 'expo-constants';
-import { Keyboard } from 'react-native';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
 import { logOut } from '../Api';
-import { TokenContext } from '../App';
 
 export default function Navbar({activeSection, setActiveSection, authToken, setAuthToken, setLoading}) {
 

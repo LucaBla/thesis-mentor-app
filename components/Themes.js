@@ -1,10 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
-import { useContext, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Pressable } from 'react-native';
-import Constants from 'expo-constants';
-import { Keyboard } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; 
-import { logOut } from '../Api';
+import { useContext } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { TokenContext } from '../App';
 import ThemesStudent from './ThemesStudent';
 import ThemesSupervisor from './ThemesSupervisor';
@@ -12,13 +7,11 @@ import ThemesSupervisor from './ThemesSupervisor';
 export default function Themes({navigation}) {
 
   const{
-    authToken,
-    setAuthToken,
     role
   } = useContext(TokenContext);
 
   return (
-    <View style={styles.ThemesWrapper}>
+    <View style={styles.wrapper}>
       {role == 'Student' && 
         <ThemesStudent
           navigation={navigation}
@@ -34,7 +27,7 @@ export default function Themes({navigation}) {
 }
 
 const styles = StyleSheet.create({
-  ThemesWrapper: {
+  wrapper: {
     flex: 1,
   }
 });

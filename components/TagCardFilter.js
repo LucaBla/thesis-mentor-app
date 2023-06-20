@@ -1,11 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
-import { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, ScrollView, TouchableOpacity, Pressable, FlatList, View, Image } from 'react-native';
-import Constants from 'expo-constants';
-import { Keyboard } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; 
-import { getTags } from '../Api';
-import { TokenContext } from '../App';
+import { useEffect, useState } from 'react';
+import { StyleSheet, Text, Pressable } from 'react-native';
 
 export default function tagCardFilter({title, id, setActiveTags, activeTags}){
   const [isActive, setIsActive] = useState(activeTags.includes(id));

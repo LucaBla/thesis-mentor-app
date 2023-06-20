@@ -1,10 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
 import { useContext, useState, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList, Pressable } from 'react-native';
-import Constants from 'expo-constants';
-import { Keyboard } from 'react-native';
+import { StyleSheet, View, FlatList, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { logOut } from '../Api';
 import { TokenContext } from '../App';
 import { getThemes } from '../Api';
 import ThemeCard from './ThemeCard';
@@ -17,8 +13,6 @@ export default function ThemesStudent({navigation}) {
 
   const{
     authToken,
-    setAuthToken,
-    role
   } = useContext(TokenContext);
 
   useEffect(() => {

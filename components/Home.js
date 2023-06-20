@@ -1,10 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import { useContext, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Pressable, SafeAreaView, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; 
-import { logOut } from '../Api';
 import { TokenContext } from '../App';
 import Themes from './Themes';
 import Supervisors from './Supervisors';

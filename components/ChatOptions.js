@@ -1,15 +1,11 @@
-import { StatusBar } from 'expo-status-bar';
-import { useContext, useEffect, useState, useCallback } from 'react';
-import { StyleSheet, Text, FlatList, View, Pressable, TextInput, Alert } from 'react-native';
+import { useContext, useEffect, useState } from 'react';
+import { StyleSheet, View, Pressable, TextInput, Alert } from 'react-native';
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
 import { getStatuses, getBillingStatuses, putChat, getMyThemes, deleteChat, getSupervisors } from '../Api';
 import { TokenContext } from '../App';
-import ChatCard from './ChatCard';
-import FilterOptionsChat from './FilterOptionsChat';
-import { useFocusEffect } from '@react-navigation/native';
-import TagCardChatOptions from './TagCardChatOptions';
+import ChatOption from './ChatOption';
 
 
 export default function ChatOptions({navigation, setOptionsVisible, activeStatus, chatId, setActiveStatus, 
@@ -27,15 +23,8 @@ export default function ChatOptions({navigation, setOptionsVisible, activeStatus
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const [statusesIsOpen, setStatusesIsOpen] = useState(false);
-  const [billingStatusesIsOpen, setBillingStatusesIsOpen] = useState(false);
-  const [themeIsOpen, setThemeIsOpen] = useState(false);
-  const [secondSupervisorIsOpen, setSecondSupervisorIsOpen] = useState(false);
-
   const{
     authToken,
-    setAuthToken,
-    role
   } = useContext(TokenContext);
 
   function closeChatOptions(){
@@ -88,125 +77,30 @@ export default function ChatOptions({navigation, setOptionsVisible, activeStatus
         onChangeText={setSearchQuery}
         value={searchQuery}         
       />
-      <Pressable style={styles.statusHeader} onPress={() => setStatusesIsOpen(!statusesIsOpen)}>
-        <Text style={styles.statusHeaderText}>Status</Text>
-        {statusesIsOpen ? (
-          <Ionicons name="chevron-up" size={20} color="black" />
-        ):(
-          <Ionicons name="chevron-down" size={20} color="black" />
-        )}
-      </Pressable>
-      {statusesIsOpen ? (
-        <>
-          <FlatList
-          style={styles.tagList}
-          data={statuses}
-          renderItem={
-            ({item}) => 
-            <TagCardChatOptions
-              id={item.id} 
-              title={item.title} 
-              activeTag={activeTagStatus} 
-              setActiveTag={setActiveTagStatus}
-            />
-          }
-          ItemSeparatorComponent={() => <View style={{height: 10}} />}
-        />
-        <View style={styles.bR}></View>
-        </>
-      ):(
-        <></>
-      )}
-      <Pressable style={styles.statusHeader} onPress={() => setBillingStatusesIsOpen(!billingStatusesIsOpen)}>
-        <Text style={styles.statusHeaderText}>Rechnungsstatus</Text>
-        {billingStatusesIsOpen ? (
-          <Ionicons name="chevron-up" size={20} color="black" />
-        ):(
-          <Ionicons name="chevron-down" size={20} color="black" />
-        )}
-      </Pressable>
-      {billingStatusesIsOpen ? (
-        <>
-          <FlatList
-            style={styles.tagList}
-            data={billingStatuses}
-            renderItem={
-              ({item}) => 
-                <TagCardChatOptions
-                  id={item.id} 
-                  title={item.title} 
-                  activeTag={activeTagBillingStatus} 
-                  setActiveTag={setActiveTagBillingStatus}
-                />
-            }
-            ItemSeparatorComponent={() => <View style={{height: 10}} />}
-          />
-          <View style={styles.bR}></View>
-        </>
-      ):(
-        <></>
-      )
-      }
-      <Pressable style={styles.statusHeader} onPress={() => setThemeIsOpen(!themeIsOpen)}>
-        <Text style={styles.statusHeaderText}>Thema</Text>
-        {themeIsOpen ? (
-          <Ionicons name="chevron-up" size={20} color="black" />
-        ):(
-          <Ionicons name="chevron-down" size={20} color="black" />
-        )}
-      </Pressable>
-      {themeIsOpen ? (
-        <>
-          <FlatList
-            style={styles.tagList}
-            data={themes}
-            renderItem={
-              ({item}) => 
-                <TagCardChatOptions
-                  id={item.id} 
-                  title={item.title} 
-                  activeTag={activeTagTheme} 
-                  setActiveTag={setActiveTagTheme}
-                />
-            }
-            ItemSeparatorComponent={() => <View style={{height: 10}} />}
-          />
-          <View style={styles.bR}></View>
-        </>
-      ):(
-        <></>
-      )
-      }
-      <Pressable style={styles.statusHeader} onPress={() => setSecondSupervisorIsOpen(!secondSupervisorIsOpen)}>
-        <Text style={styles.statusHeaderText}>Zweitprüfer</Text>
-        {secondSupervisorIsOpen ? (
-          <Ionicons name="chevron-up" size={20} color="black" />
-        ):(
-          <Ionicons name="chevron-down" size={20} color="black" />
-        )}
-      </Pressable>
-      {secondSupervisorIsOpen ? (
-        <>
-          <FlatList
-            style={styles.tagList}
-            data={supervisors}
-            renderItem={
-              ({item}) => 
-                <TagCardChatOptions
-                  id={item.id} 
-                  title={item.first_name + ' '+ item.last_name} 
-                  activeTag={activeTagSupervisor} 
-                  setActiveTag={setActiveTagSupervisor}
-                />
-            }
-            ItemSeparatorComponent={() => <View style={{height: 10}} />}
-          />
-          <View style={styles.bR}></View>
-        </>
-      ):(
-        <></>
-      )
-      }
+      <ChatOption
+        title='Status'
+        items={statuses}
+        activeTag={activeTagStatus}
+        setActiveTag={setActiveTagStatus}
+      />
+      <ChatOption
+        title='Rechnungsstatus'
+        items={billingStatuses}
+        activeTag={activeTagBillingStatus}
+        setActiveTag={setActiveTagBillingStatus}
+      />
+      <ChatOption
+        title='Thema'
+        items={themes}
+        activeTag={activeTagTheme}
+        setActiveTag={setActiveTagTheme}
+      />
+      <ChatOption
+        title='Zweitprüfer'
+        items={supervisors}
+        activeTag={activeTagSupervisor}
+        setActiveTag={setActiveTagSupervisor}
+      />
       <Pressable style={styles.deleteButton} onPress={deleteAlert}>
         <Ionicons name="trash-bin" size={24} color="white" />
       </Pressable>
@@ -215,13 +109,6 @@ export default function ChatOptions({navigation, setOptionsVisible, activeStatus
 }
 
 const styles = StyleSheet.create({
-  tagList:{
-    marginHorizontal:20,
-  },
-  tagCardText:{
-    color: 'white',
-    fontSize: 16
-  },
   closeButton:{
     paddingTop: Constants.statusBarHeight + 20 || 0,
     alignSelf: 'flex-end',
@@ -237,30 +124,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     paddingVertical: 5
-  },
-  clearButton:{
-    alignSelf: 'center',
-    marginBottom: 20,
-  },
-  clearButtonText:{
-    color: 'rgba(0,0,0, 0.5)'
-  },
-  statusHeader:{
-    marginHorizontal: 20,
-    marginBottom: 10,
-    flexDirection: 'row',
-    gap: 5,
-    alignItems: 'center',
-  },
-  statusHeaderText:{
-    fontSize: 16,
-  },
-  bR:{
-    borderBottomWidth: 2,
-    borderBottomColor: '#4DA1C7',
-    marginVertical: 10,
-    width: '90%',
-    alignSelf: 'center'
   },
   deleteButton:{
     backgroundColor: 'red',

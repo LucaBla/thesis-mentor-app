@@ -1,20 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
 import { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, ScrollView, TouchableOpacity, Pressable, FlatList, View, Image } from 'react-native';
+import { StyleSheet, Text, ScrollView, Pressable, View, Image } from 'react-native';
 import Constants from 'expo-constants';
-import { Keyboard } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; 
 import { postChat } from '../Api';
 import { TokenContext } from '../App';
 
-export default function SupervisorCard({navigation, id, email, first_name, last_name, tags}){
+export default function SupervisorCard({navigation, id, first_name, last_name, tags}){
   const [showContact, setShowContact] = useState(false);
   const [newChatId, setNewChatId] = useState(null);
 
   const{
     authToken,
-    setAuthToken,
-    role
   } = useContext(TokenContext);
 
   function createChat(){
@@ -59,13 +54,6 @@ export default function SupervisorCard({navigation, id, email, first_name, last_
 }
 
 const styles = StyleSheet.create({
-  ThemesWrapper: {
-    flex: 1,
-    width: '100%',
-    backgroundColor: 'grey',
-    paddingTop: Constants.statusBarHeight + 20 || 0,
-    gap: 20
-  },
   supervisorCard: {
     backgroundColor: '#0F4D7E',
     padding: 20,

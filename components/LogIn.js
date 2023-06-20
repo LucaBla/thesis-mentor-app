@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useContext, useState } from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Button, Pressable } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Pressable } from 'react-native';
 import Constants from 'expo-constants';
 import { Keyboard, ActivityIndicator } from 'react-native';
 import { logIn } from '../Api';
@@ -13,18 +13,13 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   const{
-    authToken,
     setAuthToken
   } = useContext(TokenContext);
 
   return (
     <TouchableOpacity style={styles.logInPage} onPress={()=>Keyboard.dismiss()} activeOpacity={1}>
       <StatusBar style="light" />
-      <Text 
-        style={styles.logInHeader}
-      >
-        ThesisMentor
-      </Text>
+      <Text style={styles.logInHeader}>ThesisMentor</Text>
       <View>
       <View style={styles.logInForm}>
         <TextInput 

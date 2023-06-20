@@ -1,14 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
 import { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, ScrollView, TouchableOpacity, Pressable, FlatList, View, Image } from 'react-native';
+import { StyleSheet, Text, Pressable, FlatList, View } from 'react-native';
 import Constants from 'expo-constants';
-import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { getSupervisor, getTags, removeTagsFromSupervisor, addTagsFromSupervisor } from '../Api';
+import {  removeTagsFromSupervisor, addTagsFromSupervisor } from '../Api';
 import { TokenContext } from '../App';
-import SupervisorCard from './SupervisorCard';
-import FilterOptions from './FilterOptions';
-import SupervisorsStudent from './SupervisorsStudent';
 
 export default function EditTags({tags, supervisor, setSupervisor, closeEditTags}) {
   const [filteredTags, setFilteredTags] = useState([]);
@@ -18,8 +13,6 @@ export default function EditTags({tags, supervisor, setSupervisor, closeEditTags
 
   const{
     authToken,
-    setAuthToken,
-    role
   } = useContext(TokenContext);
 
   function filterTags(){
@@ -112,51 +105,6 @@ export default function EditTags({tags, supervisor, setSupervisor, closeEditTags
 }
 
 const styles = StyleSheet.create({
-  profileHeader: {
-    width: '100%',
-    backgroundColor: '#0F4D7E',
-    marginTop: -(Constants.statusBarHeight + 20),
-    paddingTop: Constants.statusBarHeight + 20,
-    paddingBottom: 20,
-    paddingHorizontal: 20,
-    gap: 10,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  supervisorName:{
-    flex: 1,
-    flexDirection: 'row',
-    gap: 5,
-  },
-  supervisorNameText:{
-    color: 'white',
-    fontSize: 18,
-  },
-  userImg: {
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    borderWidth: 2,
-    borderColor: '#4DA1C7'
-  },
-  tagsWrapper:{
-    backgroundColor: '#0F4D7E',
-    marginVertical: 10,
-    marginHorizontal: 10,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-  tagHeader:{
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  tagLabel:{
-    color: 'white',
-    marginBottom: 5,
-  },
   tagCard:{
     backgroundColor: '#4DA1C7',
     alignSelf: 'flex-start',
