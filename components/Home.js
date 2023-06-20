@@ -25,7 +25,9 @@ export default function Home({navigation}) {
     <View style={styles.homePage} onPress={()=>Keyboard.dismiss()} activeOpacity={1}>
       <StatusBar style="dark" />
       {activeSection === 'supervisors'? (
-        <Supervisors/>
+        <Supervisors
+          navigation={navigation}
+        />
       ):(
         <></>
       )}

@@ -9,7 +9,7 @@ import { TokenContext } from '../App';
 import SupervisorCard from './SupervisorCard';
 import FilterOptions from './FilterOptions';
 
-export default function SupervisorsStudent() {
+export default function SupervisorsStudent({navigation}) {
   const [supervisors, setSupervisors] = useState([]);
   const [showFilterOptions, setShowFilterOptions] = useState(false);
   const [activeTags, setActiveTags] = useState([]);
@@ -46,6 +46,8 @@ export default function SupervisorsStudent() {
               renderItem={
                 ({item}) => 
                 <SupervisorCard 
+                  navigation={navigation}
+                  id={item.id} 
                   email={item.email} 
                   first_name={item.first_name} 
                   last_name={item.last_name}

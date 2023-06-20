@@ -11,7 +11,7 @@ import FilterOptions from './FilterOptions';
 import SupervisorsStudent from './SupervisorsStudent';
 import SupervisorProfile from './SupervisorProfile';
 
-export default function Supervisors() {
+export default function Supervisors( {navigation}) {
   const [supervisors, setSupervisors] = useState([]);
   const [showFilterOptions, setShowFilterOptions] = useState(false);
   const [activeTags, setActiveTags] = useState([]);
@@ -29,7 +29,9 @@ export default function Supervisors() {
   return (
     <View style={styles.ThemesWrapper}>
       {role == 'Student' && 
-        <SupervisorsStudent/>
+        <SupervisorsStudent
+          navigation={navigation}
+        />
       }
       {role === 'Supervisor' &&
         <SupervisorProfile/>

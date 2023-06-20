@@ -4,32 +4,57 @@ import { StyleSheet, Text, ScrollView, TouchableOpacity, Pressable, FlatList, Vi
 import Constants from 'expo-constants';
 import { Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
-import { getSupervisors } from '../Api';
+import { postChat } from '../Api';
 import { TokenContext } from '../App';
 
-export default function SupervisorCard({email, first_name, last_name, tags}){
+export default function SupervisorCard({navigation, id, email, first_name, last_name, tags}){
+  const [showContact, setShowContact] = useState(false);
+  const [newChatId, setNewChatId] = useState(null);
+
+  const{
+    authToken,
+    setAuthToken,
+    role
+  } = useContext(TokenContext);
+
+  function createChat(){
+    postChat(authToken, id, 23, setNewChatId);
+  }
+
+  useEffect(() => {
+    if(newChatId !== null){
+      navigation.navigate('Chat', {chatId: newChatId})
+    }
+  }, [newChatId]);
 
   return(
-    <View style={styles.supervisorCard}>
-      <Image
-        style={styles.userImg}
-        source={require('../assets/user_img.png')}
-      />
-      <View style={styles.supervisorInfo}>
-        <View style={styles.name}>
-          <Text style={styles.nameText}>{first_name}</Text>
-          <Text style={styles.nameText}>{last_name}</Text>
+    <Pressable style={styles.supervisorCard} onPress={() => setShowContact(!showContact)}>
+      <View style={styles.supervisorImgAndInfo}>
+        <Image
+          style={styles.userImg}
+          source={require('../assets/user_img.png')}
+        />
+        <View style={styles.supervisorInfo}>
+          <View style={styles.name}>
+            <Text style={styles.nameText}>{first_name}</Text>
+            <Text style={styles.nameText}>{last_name}</Text>
+          </View>
+          <ScrollView contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', gap: 5 }}>
+            {tags.map(({title}) =>(
+              
+              <View style={styles.tagCard}>
+                <Text style={styles.tagCardText}>{title}</Text>
+              </View>
+            ))}
+          </ScrollView>
         </View>
-        <ScrollView contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', gap: 5 }}>
-          {tags.map(({title}) =>(
-            
-            <View style={styles.tagCard}>
-              <Text style={styles.tagCardText}>{title}</Text>
-            </View>
-          ))}
-        </ScrollView>
       </View>
-    </View>
+      {showContact &&
+        <Pressable style={styles.contactButton} onPress={createChat}>
+          <Text style={styles.contactButtonText}>Kontakt</Text>
+        </Pressable>
+      }
+    </Pressable>
   )
 }
 
@@ -47,10 +72,10 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 16,
     borderRadius: 10,
-    flex:1,
+    gap: 10
+  },
+  supervisorImgAndInfo:{
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
     gap: 10
   },
   supervisorInfo:{
@@ -83,5 +108,18 @@ const styles = StyleSheet.create({
   tagCardText:{
     fontSize: 12,
     color: 'white'
+  },
+  contactButton:{
+    marginTop: 10,
+    backgroundColor: '#67B345',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    width: '100%'
+  },
+  contactButtonText:{
+    color: 'white',
+    fontSize: 14,
+    textAlign: 'center'
   }
 });
