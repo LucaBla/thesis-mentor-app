@@ -40,8 +40,16 @@ export default function ChatCard({id, theme, status, billingStatus, supervisor, 
               <Text style={styles.nameText}>{supervisor.first_name} {supervisor.last_name}</Text>
             </View>
           ):(
-            <View>
-              <Text style={styles.nameText}>{student.first_name} {student.last_name}</Text>
+            <View style={{flexDirection: 'row'}}>
+              {secondSupervisedPage ?(
+                <>
+                  <Text style={styles.nameText}>{supervisor.first_name} {supervisor.last_name}</Text>
+                  <Text style={styles.nameText}> & {student.first_name} {student.last_name}</Text>
+                </>
+              ):(
+                <Text style={styles.nameText}>{student.first_name} {student.last_name}</Text>
+              )
+              }
             </View>
           )}
         </View>
