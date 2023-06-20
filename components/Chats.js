@@ -84,6 +84,9 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight + 20 || 0,
     gap: 20
   },
+  supervisorList:{
+    paddingBottom: 120
+  },
   filterButton:{
     alignSelf: 'flex-end',
     marginRight: 20

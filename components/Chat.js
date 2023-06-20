@@ -141,9 +141,14 @@ export default function Chat({ route, navigation }) {
                   <Text style={styles.nameText}>{chat.supervisor.first_name} {chat.supervisor.last_name}</Text>
                 )}
               </View>
-              <Pressable onPress={() => setOptionsVisible(true)}>
-                <Ionicons name="ellipsis-horizontal" size={20} color="white" />
-              </Pressable>
+              {role === 'Supervisor' ? (
+                <Pressable onPress={() => setOptionsVisible(true)}>
+                  <Ionicons name="ellipsis-horizontal" size={20} color="white" />
+                </Pressable>
+              ):(
+                <View style={{width: 20}}></View>
+              )
+              }
             </View>
             <FlatList
               ref={flatListRef}
